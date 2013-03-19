@@ -1,0 +1,99 @@
+<div id="col-main" class="{{ collection.handle }}">
+
+  <section class="diagonal-divider clearfix">
+    <header class="section-details clearfix">
+      <h2 class="section-title">{{ collection.title }}</h2>
+      {% if collection.description != empty %}
+        <div class="description content">{{ collection.description }}</div>
+      {% endif %}
+    </header>
+
+    <button id='filter'>Artisan only</button>
+    <button id='filter-2'>All</button>
+    <button id='filter-3'>Percent</button>
+    <button id='filter-4'>Percent - Descending</button>
+
+    {% paginate collection.products by 100 %}
+      {% if collection.products.size > 0 %}
+    
+        <div class="product-grid clearfix isotope">
+          {% for product in collection.products %}
+            <div class='item {{ product.metafields.image.orientation }} {% for tag in product.tags %} {{tag}} {% endfor %}'>
+              {% include 'product-grid-item' %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% include 'pagination' %}
+      
+      {% else %}    
+        <strong>No products found in this collection.</strong>
+      {% endif %}
+    {% endpaginate %}
+  </section>
+
+  {% assign fake_var = true %}
+
+  {% if fake_var %}
+    <span> FAKE </span>
+  {% endif %}
+  
+</div> <!-- /#col-main -->
+
+<script type="text/javascript">
+  $(function(){
+    $('.product-grid').isotope({
+      itemSelector :'.item',
+      columnWidth: 1,
+      layoutMode: 'masonry',
+      getSortData : {
+        percent : function ( $elem ) {
+          return $elem.attr('data-percent');
+        }
+      }
+    });
+  });
+
+  $('.product-grid-item').hover(function(){
+    console.log('firing hover')
+    var prod_handle = $(this)[0].getAttribute('data-product');
+    var prod_url = $(this)[0].getAttribute('data-url');
+    var $item_holder = $(this)
+
+    $item_holder.css('background-color', 'black');
+    $item_holder.css('opacity', 0.3)
+    $item_holder.html('<span style="position:absolute;padding-top:'+$item_holder.height()/2+'px;padding-left:'+$item_holder.width()/2+'px;left:-15px;top:-15px;"><a href="'+prod_url+'?quantity=5">{{ "fancy_close.png" | asset_url | img_tag }}</a></span>')
+  }).mouseleave(function(){
+      $(this).css('background-color', 'black');
+      $(this).css('opacity', 1)
+      $(this).html('') //destroys product right now
+  })
+
+  // if a filter is clicked
+  // register which filters are active
+  // make sure whatever product is on the page has that tag
+  // repopulate page and masonry-ize it
+  $('.test-div').append('<ul>')
+  {% for i in (1..10) %}
+    $('.test-div').append('<li>'+{{i}}+'</li>')
+  {% endfor %}
+  $('.test-div').append('</ul>')
+
+  $('#filter').click(function(){
+    $('.product-grid').isotope({ filter: '.artisan'})
+  });
+
+  $('#filter-2').click(function(){
+    $('.product-grid').isotope({ filter: '.item'})
+  })
+
+  $('#filter-3').click(function(){
+    $('.product-grid').isotope({ sortBy: 'percent',
+                                  sortAscending: true })
+  })  
+
+  $('#filter-4').click(function(){
+    $('.product-grid').isotope({ sortBy: 'percent',
+                                  sortAscending: false })
+  })  
+</script>
