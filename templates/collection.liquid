@@ -44,8 +44,9 @@
   $(function(){
     $('.product-grid').isotope({
       itemSelector :'.item',
-      columnWidth: 1,
-      layoutMode: 'masonry',
+      masonry: {
+        columnWidth: 1
+      },
       getSortData : {
         percent : function ( $elem ) {
           return $elem.attr('data-percent');
