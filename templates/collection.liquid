@@ -91,6 +91,7 @@
   $option_values = $('.options a')
   var options_hash = new HashTable();
   var filters = [];
+  var sorters = [];
 
   // if any of the filters are clicked
   $option_values.click(function(){ 
@@ -100,9 +101,36 @@
     // if it's already been clicked, unselect it and remove it from the Hash
     if($(this).hasClass('selected')){
       $(this).removeClass('selected');
-      if ($(this).attr('data-option-value'));
 
-      options_has.removeItem($(this).attr('data-option-value'))
+      // if a filter has been clicked
+      if ($option_key.attr('data-option-key')=='filter'){
+        value_index = filters.indexOf($(this).attr('data-option-value');
+        filters.splice(value_index,1);
+
+        var filter_string = function(){ 
+          var hold_filters = '';
+          $.each(filters, function(i,v){
+            hold_filters = hold_filters +' .'+v;
+          }
+          return hold_filters;
+        )}
+
+        options_hash.setItem($option_key.attr('data-option-key'), filter_string);
+      }
+      else{ // if a sorter has been clicked
+        value_index = sorters.indexOf($(this).attr('data-option-value');
+        sorters.splice(value_index,1);
+
+        var sorter_string = function(){ 
+          var hold_sorters = '';
+          $.each(sorters, function(i,v){
+            hold_sorters = hold_sorters +' .'+v;
+          }
+          return hold_sorters;
+        )}
+
+        options_hash.setItem($option_key.attr('data-option-key'), sorter_string);
+      }
     }
     else { // if it hasn't been clicked, select it and add it to the Hash
 
