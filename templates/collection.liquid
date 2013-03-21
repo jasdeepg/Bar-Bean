@@ -98,6 +98,9 @@
     // find out if it's a filter or a sorter
     $option_key = $(this).parent()
 
+    /////
+    // REMOVE
+    ////
     // if it's already been clicked, unselect it and remove it from the Hash
     if($(this).hasClass('selected')){
       $(this).removeClass('selected');
@@ -105,42 +108,52 @@
       // if a filter has been clicked
       if ($option_key.attr('data-option-key')=='filter'){
         value_index = filters.indexOf($(this).attr('data-option-value');
-        filters.splice(value_index,1);
+        filters.sfplice(value_index,1);
 
-        var filter_string = function(){ 
-          var hold_filters = '';
-          $.each(filters, function(i,v){
-            hold_filters = hold_filters +' .'+v;
-          }
-          return hold_filters;
-        )}
+        var filter_string = getFilterString(filters);
 
         options_hash.setItem($option_key.attr('data-option-key'), filter_string);
       }
       else{ // if a sorter has been clicked
-        value_index = sorters.indexOf($(this).attr('data-option-value');
-        sorters.splice(value_index,1);
-
-        var sorter_string = function(){ 
-          var hold_sorters = '';
-          $.each(sorters, function(i,v){
-            hold_sorters = hold_sorters +' .'+v;
-          }
-          return hold_sorters;
-        )}
-
-        options_hash.setItem($option_key.attr('data-option-key'), sorter_string);
+        options_hash.removeItem($option_key.attr('data-option-key'));
       }
     }
-    else { // if it hasn't been clicked, select it and add it to the Hash
+    else { 
+      /////
+      //  ADD
+      ////
+      // if it hasn't been clicked, select it and add it to the Hash
+      if ($option_key.attr('data-option-key')=='filter'){
+        var filter_string = getFilterString(filters);
 
+        options_hash.setItem($option_key.attr('data-option-key'), filter_string);
+      }
+      else {
+        options_hash.setItem($option_key.attr('data-option-key'), $option_values.attr('data-option-value'));
+      }
     }
 
     // run the filter/sorter and reload the grid
-    $('product-grid').isotope{ options_hash }
+    $.each(options_hash, function(k,v){
+      console.log(k + ' ' + v);
+      $('product-grid').isotope{ k:v }
+    })
   })
 
-  //Classes
+  // Functions
+
+  function getFilterString(filters){
+    var hold_filters = '';
+
+    $.each(filters, function(i,v){
+      hold_filters = hold_filters +' .'+v;
+    }
+
+    return hold_filters;
+  }
+
+
+  // Classes 
 
   function HashTable(obj)
   {
