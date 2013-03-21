@@ -68,33 +68,6 @@
 
   <div class="wrapper">
 
-    <!-- Header -->
-    <header id="top" class="clearfix">
-{% comment %} !!!!!!!!!! This is where the title is
-
-      <h1 id="site-title">
-        <a href="/" title="Home">
-          {% if settings.logo_image == "logo.png" %}
-            <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" />
-          {% else %}
-            {{ shop.name | escape }}
-          {% endif %}
-        </a>
-      </h1>
-{% endcomment %}
-
-{% comment %} !!!!!!!!!! This is the search box
-
-        {% if settings.show_header_search %}
-        <form id="header-search" action="/search" method="get">
-          <label for="top-search-input" class="visuallyhidden">Search</label>
-          <input type="text" id="top-search-input" name="q" class="search-input" value="" accesskey="4"  autocomplete="off" placeholder="Search" />
-          <input type="submit" id="top-search-submit" class="search-submit ir" value="Search" />
-        </form>
-        {% endif %}
-{% endcomment %}
-    </header>
-
     <div id='market-{{ template | split: '.' | lowercase }}'>
       
       <div id='nav-1'>
@@ -149,22 +122,24 @@
             {% endif %}
 
             <li class="cart-link">
-              <a href="/cart" class="num-items-in-cart">
+              <a href="/cart">
                 <span class="icon">
-                 {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }}
+                 cart ({{ cart.item_count }})
                 </span>
               </a>
             </li>
 
+          <!--  
+            Checkout button
             <li class="checkout-link">
               <a href="/cart" class="btn">Check out</a>
-            </li>
+            </li> -->
 
           </ul>
         </div><!-- /#umbrella -->
 
       </div>
-      <div id='market-title-{{ template | split: '.' | lowercase }}'></div>
+      <div id='market-title-{{ template | split: '.' | lowercase }}' class='logo-title'></div>
     </div>
 
     <!-- Content -->

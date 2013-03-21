@@ -1,6 +1,5 @@
 <div id="col-main" class="{{ collection.handle }}">
 
-  <section class="diagonal-divider clearfix">
     <header class="section-details clearfix">
       <h2 class="section-title">{{ collection.title }}</h2>
       {% if collection.description != empty %}
@@ -8,10 +7,30 @@
       {% endif %}
     </header>
 
-    <button id='filter'>Artisan only</button>
-    <button id='filter-2'>All</button>
-    <button id='filter-3'>Percent</button>
-    <button id='filter-4'>Percent - Descending</button>
+
+    <div class='options'>
+      <ul class='option-set' id='sort-filters' data-option-key='sortBy'>
+        <li><a href='#sort-filters' class='option-value' data-option-value='percent'>Percent</a></li>
+        <li><a href='#sort-filters' class='option-value' data-option-value='popularity'>Popularity</a></li>
+      </ul>
+      <ul class='option-set' id='batch-filters' data-option-key='filter'>
+        <li><a href='#batch-filters' class='option-value' data-option-value='.small-batch'>Small-batch</a></li>
+        <li><a href='#batch-filters' class='option-value' data-option-value='.large-batch'>Large-batch</a></li>
+      </ul>
+      <ul class='option-set' id='region-filters' data-option-key='filter'>
+        <li><a href='#region-filters' class='option-value' data-option-value='.NE'>Northeast</a></li>
+        <li><a href='#region-filters' class='option-value' data-option-value='.SE'>Southeast</a></li>
+        <li><a href='#region-filters'class='option-value' data-option-value='.NW'>Northwest</a></li>
+        <li><a href='#region-filters'class='option-value' data-option-value='.SW'>Southwest</a></li>
+        <li><a href='#region-filters' class='option-value' data-option-value='.MW'>Midwest</a></li>
+      </ul>
+    </div>
+
+
+    <div id='house-filter row'>
+      <div id='filter-1'></div> Artisan
+      <div id='filter-4'></div> Percent
+    </div>
 
     {% paginate collection.products by 100 %}
       {% if collection.products.size > 0 %}
@@ -31,12 +50,6 @@
       {% endif %}
     {% endpaginate %}
   </section>
-
-  {% assign fake_var = true %}
-
-  {% if fake_var %}
-    <span> FAKE </span>
-  {% endif %}
   
 </div> <!-- /#col-main -->
 
@@ -74,27 +87,115 @@
   // register which filters are active
   // make sure whatever product is on the page has that tag
   // repopulate page and masonry-ize it
-  $('.test-div').append('<ul>')
-  {% for i in (1..10) %}
-    $('.test-div').append('<li>'+{{i}}+'</li>')
-  {% endfor %}
-  $('.test-div').append('</ul>')
 
-  $('#filter').click(function(){
-    $('.product-grid').isotope({ filter: '.artisan'})
-  });
+  $option_values = $('.options a')
+  var options_hash = new HashTable();
+  var filters = [];
 
-  $('#filter-2').click(function(){
-    $('.product-grid').isotope({ filter: '.item'})
+  // if any of the filters are clicked
+  $option_values.click(function(){ 
+    // find out if it's a filter or a sorter
+    $option_key = $(this).parent()
+
+    // if it's already been clicked, unselect it and remove it from the Hash
+    if($(this).hasClass('selected')){
+      $(this).removeClass('selected');
+      if ($(this).attr('data-option-value'));
+
+      options_has.removeItem($(this).attr('data-option-value'))
+    }
+    else { // if it hasn't been clicked, select it and add it to the Hash
+
+    }
+
+    // run the filter/sorter and reload the grid
+    $('product-grid').isotope{ options_hash }
   })
 
-  $('#filter-3').click(function(){
-    $('.product-grid').isotope({ sortBy: 'percent',
-                                  sortAscending: true })
-  })  
+  //Classes
 
-  $('#filter-4').click(function(){
-    $('.product-grid').isotope({ sortBy: 'percent',
-                                  sortAscending: false })
+  function HashTable(obj)
+  {
+    this.length = 0;
+    this.items = {};
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            this.items[p] = obj[p];
+            this.length++;
+        }
+    }
+
+    this.setItem = function(key, value)
+    {
+        var previous = undefined;
+        if (this.hasItem(key)) {
+            previous = this.items[key];
+        }
+        else {
+            this.length++;
+        }
+        this.items[key] = value;
+        return previous;
+    }
+
+    this.getItem = function(key) {
+        return this.hasItem(key) ? this.items[key] : undefined;
+    }
+
+    this.hasItem = function(key)
+    {
+        return this.items.hasOwnProperty(key);
+    }
+   
+    this.removeItem = function(key)
+    {
+        if (this.hasItem(key)) {
+            previous = this.items[key];
+            this.length--;
+            delete this.items[key];
+            return previous;
+        }
+        else {
+            return undefined;
+        }
+    }
+
+    this.keys = function()
+    {
+        var keys = [];
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                keys.push(k);
+            }
+        }
+        return keys;
+    }
+
+    this.values = function()
+    {
+        var values = [];
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                values.push(this.items[k]);
+            }
+        }
+        return values;
+    }
+
+    this.each = function(fn) {
+        for (var k in this.items) {
+            if (this.hasItem(k)) {
+                fn(k, this.items[k]);
+            }
+        }
+    }
+
+    this.clear = function()
+    {
+        this.items = {}
+        this.length = 0;
+    }
+  }
+
   })  
 </script>
