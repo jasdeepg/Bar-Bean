@@ -1,5 +1,64 @@
 <div id="col-main">
+<div id='product-container'>
+  <div class='product-desc row'>
+    <div class='product-highlights large-4 columns'>
+      <p><b>{{ product.vendor | upcase }}</b></p>
+      <p>{{ product.title | upcase}}</p>
+      <p>{{ product.variants.first.weight }}</p>
+      <p>Origin: Madagascar</p>
+      <p>Produced in: Brooklyn, NY</p>
+      <p>Pairs with: Lorem ipsum dolor sit amet, </p>
+      <p>TAGS:
+      {% for tag in product.tags %}
+        {{ tag }}, 
+      {% endfor %}</p>
+    </div>
+    <div class='large-5 columns' id='checkout-panel'>
+      <div class='row'>
+        <div class='large-6 columns' id='bar-image'>
+          <img src="{{ product.featured_image | product_img_url: 'medium' }}" alt="{{ product.title | escape }}" id="medium-thumb" />
+        </div>
+        <div class='large-6 columns' id='product-action'>
+          <form id='myform' method="post" enctype="multipart/form-data">
+            <div class='quantity-dropdown'>
+              <label>Number of bars</label>
+              <select id='quantity' name='quantity'>
+                {% assign in_stock = product.variants.first.inventory_quantity %}
+                {% for i in (1..in_stock) %}
+                  <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+              </select>
 
+              <select id='product-{{ product.id }}-drop' name='id'>
+                {% for variant in product.variants %}
+                  <option value="{{ variant.id }}">{{ variant.title }}</option>
+                {% endfor %}
+              </select>
+
+            </div>
+            <br>
+            <div id='price-field'></div>
+            <br>
+            <input class="btn" type="submit" name="add" id="add-to-cart-{{ product.id }}" value="Add to Cart" />
+          </form> 
+          <div id='try-contain'>
+            Try before you buy
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='product-desc row'>
+    <div class='product-depth large-4 columns'>
+      <hr />
+      Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. 
+    </div>
+  </div>
+</div>
+
+
+{% comment %}
   <div id="product" class="clearfix content">
 
     <div id="product-information">
@@ -14,25 +73,23 @@
         </div>
 
         {% if product.available %}
-          <form action="/cart/add" name='quantity' method="post" class="variants" id="product-actions" enctype="multipart/form-data">
-            <div class="options clearfix"> 
-
-              <select name="quantity" id='product-{{ product.id }}-drop' class='dropdown-quant'>
-              </select>
+          <form action="/cart/add" method="post" enctype="multipart/form-data">
+              <div id='product-variants'>
+                <div class='price-field'></div>
+                  <select id='product-{{ product.id }}-drop' name='id'>
+                    {% assign in_stock = product.variants.first.inventory_quantity %}
+                    {% for i in (1..in_stock) %}
+                      <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                 
-              <div id="purchase">
-                <p class="price"></p>                                 
-                <input class="btn" type="submit" name="add" id="add-to-cart-{{ product.id }}" value="Add to Cart" />
-              </div>
-
-            </div><!-- /.options -->
+            <input class="btn" type="submit" name="add" id="add-to-cart-{{ product.id }}" value="Add to Cart" />
           </form>
 
         {% else %}
           <div id="product-actions" class="sold-out">
-            <div id="purchase">
-              <p class="price">Sold out.</p>      
-            </div>
+            <p class="price-field">Sold out.</p>      
           </div>      
         {% endif %}
       </div><!-- /#product-header -->
@@ -49,7 +106,7 @@
 
       <div id="active-wrapper">
         {% if settings.main_image_display == 'Lightbox' %}
-        <a href="{{ product.featured_image | product_img_url: 'original' }}" title="{{ product.featured_image.alt | escape }}" rel="fancybox">
+        <a href="{{ product.featured_image | product_img_url: 'small' }}" title="{{ product.featured_image.alt | escape }}" rel="fancybox">
         {% endif %}     
           <img style="max-width:303px" src="{{ product.featured_image | product_img_url: 'large' }}" alt="{{ product.title | escape }}" id="large-thumb" />
         {% if settings.main_image_display == 'Lightbox' %}
@@ -103,5 +160,49 @@
     {% endif %}
 
   {% endif %}
+{% endcomment %}
 
 </div><!-- /#col-main -->
+{% if product.available %}
+<script>
+    console.log($('#myform').serialize())
+
+  // add to cart but don't go to checkout page -- post data and reload cart hint
+  $('#add-to-cart-{{ product.id }}').click(function(){
+    console.log($('#myform').serialize())
+    var posting = $.post('/cart/add.js', $('#myform').serialize())
+      .success(function(){alert('success')})
+      .fail(function(){alert('failed')});   
+  })
+
+  // implement dynamic dropdown select
+  var selectCallback = function(variant, selector) {
+    if (variant && variant.available) {
+      console.log('this is changing price')
+      // selected a valid variant
+      $('#add-to-cart').removeClass('disabled').removeAttr('disabled'); // remove unavailable class from add-to-cart button, and re-enable button
+      if(variant.compare_at_price == null){
+        $('#price-field').html('<strong>'+Shopify.formatMoney($('#quantity').val()*variant.price, "{{shop.money_with_currency_format}}")+'</strong>');
+      } else {
+        $('#price-field').html('<strong>'+Shopify.formatMoney(variant.price, "{{shop.money_with_currency_format}}") + '</strong> <span class="compare_at_price">was <del>' + Shopify.formatMoney(variant.compare_at_price, "{{shop.money_with_currency_format}}") + '</del></span>');
+      }
+    } else {
+      // variant doesn't exist
+      $('#add-to-cart').addClass('disabled').attr('disabled', 'disabled'); // set add-to-cart button to unavailable class and disable button
+      var message = variant ? "Sold Out" : "Unavailable";
+      $('#price-field').text(message); // update price-field message
+    }
+  };
+
+  // initialize multi selector for product
+  $(function() {
+    var selector = new Shopify.OptionSelectors("product-{{ product.id }}-drop", { product: {{ product | json }}, onVariantSelected: selectCallback }); 
+
+    $('#quantity').change(function(){
+      selector.selectors[0].element.onchange();
+    })
+
+    $('.single-option-selector').css('display', 'none')
+  });
+</script>
+{% endif %}

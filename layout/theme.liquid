@@ -66,12 +66,14 @@
 
 <body class="{% if customer %}customer-logged-in {% endif %}template{{ template | split: '.' | first | camelize }}">
 
-  <div class="wrapper">
 
-    <div id='market-{{ template | split: '.' | lowercase }}'>
-      
-      <div id='nav-1'>
-        <nav id="top-menu" class="clearfix">
+
+  <div class='row'>
+    <div style='font-family:"brandon-blk";text-align:center;font-size:60px'>BAR & BEAN</div>
+  </div>
+  <hr style='margin-top:10px;margin-bottom:10px;'/>
+  <div class='row'>
+      <div id='nav-1' class='large-6 columns large-centered'>
           <ul>
             {% for link in linklists.main-menu.links %}
             <li class="{% if forloop.first %}first{% elsif forloop.last %}last{%endif%}">
@@ -79,67 +81,143 @@
               {% if linklists[child_list_handle].links != blank %}
               <div class="has-dropdown">
                 <a href="{{ link.url }}" class="clearfix">
-                  <span class="nav-label">{{ link.title | escape }}</span>
+                  <span class="nav-label">{{ link.title | escape | upcase }}</span>
                   <span class="nav-arrow"></span>
                 </a>
                 <ul>
                   {% for childlink in linklists[child_list_handle].links %}
-                  <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+                  <li><a href="{{ childlink.url }}">{{ childlink.title | escape | upscase }}</a></li>
                   {% endfor %}
                 </ul>
               </div>
               {% else %}
-                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                <a href="{{ link.url }}">{{ link.title | escape | upcase }}</a>
               {% endif %}
             </li>
             {% endfor %}
           </ul>
-        </nav>
       </div>
+  </div>
+
+<div id="umbrella">
+
+  <ul>  
+    {% if shop.customer_accounts_enabled %}
+      {% if customer %}
+      <li>
+        Welcome {{ customer.first_name }} {{ '(Log out)' | customer_logout_link }}
+      </li>
+      <li>
+        <a href="/account">My Account</a>
+      </li>
+      {% else %}
+      <li>
+        {{ 'Log in' | customer_login_link }}
+      </li>
+      {% if shop.customer_accounts_optional %} 
+      <li>
+        {{ 'Create an account' | customer_register_link }}
+      </li>
+      {% endif %}
+      {% endif %}
+    {% endif %}
+
+    
+
+  <!--  
+    Checkout button
+    <li class="checkout-link">
+      <a href="/cart" class="btn">Check out</a>
+    </li> -->
+
+  </ul>
+  <div class="cart-link">
+    <a href="#">
+      <span class="icon">
+       CART ({{ cart.item_count }})
+      </span>
+    </a>
+    <div class='cart-panel'>
+      <div class='row'>
+        <div id='checkout-action-button' class='large-6 columns'>
+          <a href="/cart/add" class='button alert'>Checkout</a>
+        </div>
+        <div class='large-6 columns'>
+          <div class='row'>
+            <p style='float:right'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'bar', 'bars' }}</p>
+          </div>
+          <div class='row'>
+            {% assign total_price = cart.total_price/100 %}
+            <p style='float:right' class='price'></p>
+            <script type="text/javascript">
+              var overall_price = 0;
+              var $prices = $('.product-preview .price');
+
+              $('.price').html('$ '+ {{ cart.total_price }}/100)
+            </script>
+          </div>
+        </div>
+      </div>
+      <!-- display 5 items [# of items in cart + suggestive blanks] -->
+      {% for item in cart.items %}
+        <div class='product-preview row' id='product-{{ item.id }}'>
+          <img class='large-2 columns' src="{{ item.product.featured_image | product_img_url: 'small' }}">
+          <div class='large-8 columns' id='description'>
+            <p>{{ item.vendor }}</p>
+            <p>{{ item.title }}</p>
+            <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
+            <script type="text/javascript">
+              var total_price = {{ item.price }}*{{ item.quantity }}/100;
+              console.log('price ' + {{ item.price }}/100 )
+              console.log('quant ' + {{ item.quantity }})
+              console.log(total_price)
+              $('#product-{{ item.id }} #description').append('<p class="price">$'+total_price+'</p>')
+            </script>
+          </div>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+  <script type="text/javascript">
+    $('.cart-link a').click(function(){
+      console.log('clicked')
+      if ($('.cart-panel').is(':visible')){
+        $('.cart-panel').fadeOut(200);
+        //hide().animate({},250)
+      }
+      else{
+        console.log('clicked2')
+        $('.cart-panel').fadeIn(200);
+        //css('display', 'block').animate({},1000)
+      }
+    })
+
+    function showPanel(){
+      $('.cart-panel').fadeIn(200);
+      $('.cart-panel').css('display', 'block')
+    }
+
+    function testFunction(){
+      alert('test')
+    }
+  </script>
+
+    <div class="wrapper">
+
+
+    <div id='market-{{ template | split: '.' | lowercase }}'>
+    
     
       <div id='nav-2'>
-        <div id="umbrella">
-          <ul>
-            
-            {% if shop.customer_accounts_enabled %}
-              {% if customer %}
-              <li>
-                Welcome {{ customer.first_name }} {{ '(Log out)' | customer_logout_link }}
-              </li>
-              <li>
-                <a href="/account">My Account</a>
-              </li>
-              {% else %}
-              <li>
-                {{ 'Log in' | customer_login_link }}
-              </li>
-              {% if shop.customer_accounts_optional %} 
-              <li>
-                {{ 'Create an account' | customer_register_link }}
-              </li>
-              {% endif %}
-              {% endif %}
-            {% endif %}
-
-            <li class="cart-link">
-              <a href="/cart">
-                <span class="icon">
-                 cart ({{ cart.item_count }})
-                </span>
-              </a>
-            </li>
-
-          <!--  
-            Checkout button
-            <li class="checkout-link">
-              <a href="/cart" class="btn">Check out</a>
-            </li> -->
-
-          </ul>
-        </div><!-- /#umbrella -->
-
       </div>
-      <div id='market-title-{{ template | split: '.' | lowercase }}' class='logo-title'></div>
+      <div id='market-title-{{ template | split: '.' | upcase }}' class='logo-title'>
+        {% if template == 'product' %}
+          <p>{{ product.title | upcase }}</p>
+        {% endif %}
+      </div>
     </div>
 
     <!-- Content -->
@@ -160,40 +238,8 @@
     <footer id="bottom">
 
       <div id="footer-left">
-        <ul id="footer-nav" class="clearfix">
-        {% for link in linklists.[settings.footer_linklist].links %}
-          <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
-        {% endfor %}
-        </ul>
-        <p>&copy; {{ 'now' | date: '%Y' }} <a href="/">{{ shop.name }}</a>. All Rights Reserved.<br />{{ powered_by_link }}</p>
+        <p>&copy; {{ 'now' | date: '%Y' }} <a href="/">{{ shop.name }}</a>. All Rights Reserved.</p>
       </div>
-
-      {% if settings.sm_facebook or settings.sm_twitter or settings.sm_youtube or settings.sm_flickr or settings.sm_pinterest %}
-      <div id="footer-right">
-        <ul id="sm-icons" class="clearfix">
-          {%if settings.sm_youtube %}<li id="sm-youtube"><a href="{{settings.sm_youtube_link}}" class="ir">YouTube</a></li>{% endif %}
-          {%if settings.sm_flickr %}<li id="sm-flickr"><a href="{{settings.sm_flickr_link}}" class="ir">Flickr</a></li>{% endif %}
-          {%if settings.sm_twitter %}<li id="sm-twitter"><a href="{{settings.sm_twitter_link}}" class="ir">Twitter</a></li>{% endif %}
-          {%if settings.sm_facebook %}<li id="sm-facebook"><a href="{{settings.sm_facebook_link}}" class="ir">Facebook</a></li>{% endif %}
-          {%if settings.sm_vimeo %}<li id="sm-vimeo"><a href="{{settings.sm_vimeo_link}}" class="ir">Vimeo</a></li>{% endif %}
-          {%if settings.sm_pinterest %}<li id="sm-pinterest"><a href="{{settings.sm_pinterest_link}}" class="ir">Pinterest</a></li>{% endif %}
-        </ul>
-      </div>
-      {% endif %}
-
-      {% if settings.show_amex or settings.show_discover or settings.show_visa or settings.show_mastercard or settings.show_maestro or settings.show_cirrus or settings.show_paypal or settings.show_google %}
-      <div id="footer-payment-methods">
-        <p>Payment methods we accept</p>
-        {% if settings.show_amex %}       {{ 'cc-amex.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_discover %}   {{ 'cc-discover.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_visa %}       {{ 'cc-visa.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_mastercard %} {{ 'cc-mastercard.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_maestro %}    {{ 'cc-maestro.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_cirrus %}     {{ 'cc-cirrus.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_paypal %}     {{ 'cc-paypal.png' | asset_url | img_tag }} {% endif %}
-        {% if settings.show_google %}     {{ 'cc-google.png' | asset_url | img_tag }} {% endif %}
-      </div>
-      {% endif %}
 
     </footer>
 
@@ -218,52 +264,6 @@
         }
       });
     </script>
-  {% endif %}
-
-  {% if product.available %}
-  <script>
-    var url = $.url();
-    //$('#{{ product-{{ product.id }}-drop').val(url.param('quantity'))
-    var quantity = url.param('quantity')
-
-    console.log(quantity)
-
-    var selectCallback = function(variant, selector) {
-      if (variant && variant.available) {
-        console.log('this is changing price')
-        // selected a valid variant
-        $('#add-to-cart').removeClass('disabled').removeAttr('disabled'); // remove unavailable class from add-to-cart button, and re-enable button
-        if(variant.compare_at_price == null){
-          $('.options .price').html('<strong>'+Shopify.formatMoney(quantity*variant.price, "{{shop.money_with_currency_format}}")+'</strong>');
-        } else {
-          $('.options .price').html('<strong>'+Shopify.formatMoney(variant.price, "{{shop.money_with_currency_format}}") + '</strong> <span class="compare_at_price">was <del>' + Shopify.formatMoney(variant.compare_at_price, "{{shop.money_with_currency_format}}") + '</del></span>');
-        }
-      } else {
-        // variant doesn't exist
-        $('#add-to-cart').addClass('disabled').attr('disabled', 'disabled'); // set add-to-cart button to unavailable class and disable button
-        var message = variant ? "Sold Out" : "Unavailable";
-        $('.options .price').text(message); // update price-field message
-      }
-    };
-
-    // initialize multi selector for product
-    $(function() {
-      new Shopify.OptionSelectors("product-{{ product.id }}-drop", { product: {{ product | json }}, onVariantSelected: selectCallback });
-      {% assign found_one_in_stock = false %}
-      {% for variant in product.variants %}
-        {% if variant.available and found_one_in_stock == false %}
-          {% assign found_one_in_stock = true %}
-          console.log({{variant | json}})
-          {% assign in_stock = variant.inventory_quantity %}
-          console.log('{% for i in (0..in_stock) %} {{ i }} {% endfor %}')
-          {% for i in (0..in_stock) %}
-            console.log({{i}})
-          //  $('#product-{{ product.id }}-drop').append('<option value="{{i}}">{{i}}</option>');
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-    });
-  </script>
   {% endif %}
 
   {% if template == 'index' and settings.show_carousel %}
