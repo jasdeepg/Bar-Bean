@@ -1,9 +1,10 @@
 <div id="col-main">
+  <br>
 <div id='product-container'>
   <div class='product-desc row'>
     <div class='product-highlights large-4 columns'>
-      <p><b>{{ product.vendor | upcase }}</b></p>
-      <p>{{ product.title | upcase}}</p>
+      <p style='font-family:"brandon-blk"'><b>{{ product.vendor | upcase }}</b></p>
+      <p style='font-family:"brandon-reg"'>{{ product.title | upcase}}</p>
       <p>{{ product.variants.first.weight }}</p>
       <p>Origin: Madagascar</p>
       <p>Produced in: Brooklyn, NY</p>
@@ -57,111 +58,6 @@
   </div>
 </div>
 
-
-{% comment %}
-  <div id="product" class="clearfix content">
-
-    <div id="product-information">
-
-      <p id="add-to-cart-msg"></p>
-
-      <div id="product-header" class="diagonal-divider clearfix">
-
-        <div id="product-header-title">
-          <h1 id="product-title">{{ product.title }}</h1>
-          {% if settings.show_vendor %}<h2 id="product-vendor">{{ product.vendor | link_to_vendor }}</h2>{% endif %}
-        </div>
-
-        {% if product.available %}
-          <form action="/cart/add" method="post" enctype="multipart/form-data">
-              <div id='product-variants'>
-                <div class='price-field'></div>
-                  <select id='product-{{ product.id }}-drop' name='id'>
-                    {% assign in_stock = product.variants.first.inventory_quantity %}
-                    {% for i in (1..in_stock) %}
-                      <option value="{{i}}">{{i}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                
-            <input class="btn" type="submit" name="add" id="add-to-cart-{{ product.id }}" value="Add to Cart" />
-          </form>
-
-        {% else %}
-          <div id="product-actions" class="sold-out">
-            <p class="price-field">Sold out.</p>      
-          </div>      
-        {% endif %}
-      </div><!-- /#product-header -->
-
-      
-      <div class="description">
-        {{ product.description }}
-        {% include 'social-sharing' %} 
-      </div>            
-
-    </div><!-- /#product-information -->
-    
-    <div id="product-gallery"{% if settings.main_image_display == 'Zoom-in' %} class="zoom-in"{% endif %}>
-
-      <div id="active-wrapper">
-        {% if settings.main_image_display == 'Lightbox' %}
-        <a href="{{ product.featured_image | product_img_url: 'small' }}" title="{{ product.featured_image.alt | escape }}" rel="fancybox">
-        {% endif %}     
-          <img style="max-width:303px" src="{{ product.featured_image | product_img_url: 'large' }}" alt="{{ product.title | escape }}" id="large-thumb" />
-        {% if settings.main_image_display == 'Lightbox' %}
-        </a>
-        {% endif %}
-      </div>
-
-      <ul id="thumbs" {% if product.images.size == 1 %}class="visuallyhidden"{% endif %}>
-        {% for image in product.images %}
-        {% unless forloop.first and settings.main_image_display == 'Lightbox' %}
-        <li>
-          <a{% if settings.main_image_display == 'Lightbox' %} rel="fancybox"{% endif %} class="gallery" href="{{ image | product_img_url: 'original' }}" title="{{ image.alt | escape }}">
-            <img src="{{ image | product_img_url: 'thumb' }}" alt="{{ image.alt | escape }}" />
-          </a>
-        </li>
-        {% endunless %}
-        {% endfor %}
-      </ul>
-      
-    </div><!-- /#product-gallery -->
-
-  </div><!-- /#product -->
-
-  {% if settings.productspg_related_products %}
-  
-    {% include 'related-products' %}
-
-  {% elsif settings.productspg_featured_collection != blank %}
-
-    {% assign collection = collections[settings.productspg_featured_collection] %}
-    {% assign products   = collection.products %}
-
-    {% if products.size > 0 %}
-      <section class="diagonal-divider clearfix">
-
-        {% unless settings.productspg_featured_collection_heading == blank %}
-        <header class="section-details clearfix">
-          <h1 class="section-title">{{ settings.productspg_featured_collection_heading | link_to: collection.url }}</h1>
-        </header> 
-        {% endunless %}
-
-        <ul class="product-grid" id="secondary-grid">
-          {% for product in products limit: settings.productspg_featured_limit %}
-          <li class="{% cycle '', '', '', 'last-in-row' %}">
-            {% include 'product-grid-item' %}
-          </li>
-          {% endfor %}
-        </ul>      
-
-      </section>
-    {% endif %}
-
-  {% endif %}
-{% endcomment %}
-
 </div><!-- /#col-main -->
 {% if product.available %}
 <script>
@@ -170,9 +66,15 @@
   // add to cart but don't go to checkout page -- post data and reload cart hint
   $('#add-to-cart-{{ product.id }}').click(function(){
     console.log($('#myform').serialize())
-    var posting = $.post('/cart/add.js', $('#myform').serialize())
-      .success(function(){alert('success')})
-      .fail(function(){alert('failed')});   
+    var posting = $.ajax({
+      type: 'POST',
+      url: '/cart/add.js', 
+      data: $('#myform').serialize(),
+      dataType: 'json',
+      success: function(response){ alert('success caro'); console.log(response);},
+      error: function(){ alert('failed caro') }
+    });
+    return false;
   })
 
   // implement dynamic dropdown select

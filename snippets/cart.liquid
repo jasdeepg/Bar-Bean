@@ -1,0 +1,45 @@
+    <a href="#">
+      <span class="icon">
+       CART ({{ cart.item_count }})
+      </span>
+    </a>
+    <div class='cart-panel'>
+      <div class='row'>
+        <div id='checkout-action-button' class='large-6 columns'>
+          <a href="/cart/add" class='button alert' style='float:left'>Checkout</a>
+        </div>
+        <div class='large-6 columns'>
+          <div class='row'>
+            <p style='float:right'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'bar', 'bars' }}</p>
+          </div>
+          <div class='row'>
+            {% assign total_price = cart.total_price/100 %}
+            <script type="text/javascript">
+              var overall_price = 0;
+              var $prices = $('.product-preview .price');
+
+              $('.price').html('$ '+ {{ cart.total_price }}/100)
+            </script>
+            <p style='float:right' class='price'></p>
+          </div>
+        </div>
+      </div>
+      {% for item in cart.items %}
+        <div class='product-preview row' id='product-{{ item.id }}'>
+          <img class='large-2 columns' src="{{ item.product.featured_image | product_img_url: 'small' }}">
+          <div class='large-8 columns' id='description'>
+            <p>{{ item.vendor }}</p>
+            <p>{{ item.title }}</p>
+            <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
+          </div>
+          <script type="text/javascript">
+            var total_price = {{ item.price }}*{{ item.quantity }}/100;
+            console.log('price ' + {{ item.price }}/100 )
+            console.log('quant ' + {{ item.quantity }})
+            console.log(total_price)
+            $('#product-{{ item.id }} #description').append('<p class="price">$'+total_price+'</p>')
+          </script>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>

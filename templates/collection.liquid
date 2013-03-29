@@ -1,22 +1,36 @@
 <div id="col-main" class="{{ collection.handle }}">
-  <br>
+    <div class='row'>
     <div class='options row'>
-      <ul class='option-set large-3 columns' id='sort-filters' data-option-key='sortBy'>
+      <ul class='option-set large-2 columns' id='sort-filters' data-option-key='sortBy'>
+        <label> Sort by: </label>
         <li><a href='#options' class='option-value' data-option-value='percent'></a> Percent</li>
         <li><a href='#options' class='option-value' data-option-value='popularity'></a> Popularity</li>
       </ul>
-      <ul class='option-set large-3 columns' id='batch-filters' data-option-key='filter'>
+      <ul class='option-set large-2 columns' id='batch-filters' data-option-key='filter'>
+        <label> Batch size: </label>
         <li><a href='#options' class='option-value' data-option-value='.artisan'></a> Small-batch</li>
         <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
       </ul>
-      <ul class='option-set large-6 columns' id='region-filters' data-option-key='filter'>
+      <ul class='option-set large-4 columns' id='region-filters' data-option-key='filter'>
+        <label> Bar produced in: </label>
         <li><a href='#options' class='option-value' data-option-value='.NE'></a> Northeast</li>
         <li><a href='#options' class='option-value' data-option-value='.SE'></a> Southeast</li>
         <li><a href='#options' class='option-value' data-option-value='.NW'></a> Northwest</li>
         <li><a href='#options' class='option-value' data-option-value='.SW'></a> Southwest</li>
         <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
       </ul>
+      <ul class='option-set large-4 columns' id='region-filters' data-option-key='filter'>
+        <label> Flavor: </label>
+        <li><a href='#options' class='option-value' data-option-value='.chocolatey'></a> Chocolatey</li>
+        <li><a href='#options' class='option-value' data-option-value='.citrus'></a> Citrus</li>
+        <li><a href='#options' class='option-value' data-option-value='.fruity'></a> Fruity</li>
+        <li><a href='#options' class='option-value' data-option-value='.floral'></a> Floral</li>
+        <li><a href='#options' class='option-value' data-option-value='.earthy'></a> Earthy</li>
+        <li><a href='#options' class='option-value' data-option-value='.nutty'></a> Nutty</li>
+        <li><a href='#options' class='option-value' data-option-value='.spicy'></a> Spicy</li>
+      </ul>
     </div>
+  </div>
 
     {% paginate collection.products by 100 %}
       {% if collection.products.size > 0 %}
@@ -54,18 +68,86 @@
     });
   });
 
+  $('.product-grid').children('.item').children('.product-grid-item').each(function(){
+    var dataset=[1,5,'+', 'Learn'];
+    var w = $(this).width(),
+        h = $(this).height(), 
+        sep = 70; 
+
+    console.log(w+' '+h);
+
+    var div_id = $(this).attr('id');
+
+    console.log(div_id);
+
+    var canvas = d3.select('#'+div_id)
+            .append('svg')
+            .attr('width', w)
+            .attr('height', h)
+
+    var elemBlock = canvas.selectAll('g')
+              .data(dataset);
+
+    if (w > h){
+      var elemBlockEnter = elemBlock.enter()
+                            .append('g')
+                            .attr('transform', function(d,i) {console.log('(data, i) '+ '('+d+','+i+') '+ ' (w, sep, i) ' + '('+w+','+sep+','+i+')'+' transform: '+ (((0.5)*w-sep)+i*sep)); if (i>2){return 'translate('+w/2+','+0.8*h+')';}return 'translate('+(((0.5)*w-sep)+(i*sep))+','+h/2+')';})
+                            .attr('display','none')
+                            .attr('class', 'hover-'+div_id)
+    }
+    else{
+      var elemBlockEnter = elemBlock.enter()
+                            .append('g')
+                            .attr('transform', function(d,i) {if (i>2){ return 'translate('+w/2+','+(((0.5)*h-(sep/1.2))+(i*(sep/1.2)))+')';} return 'translate('+w/2+','+(((0.5)*h-sep)+(i*sep))+')';})
+                            .attr('display','none')
+                            .attr('class', 'hover-'+div_id)
+    }
+
+    var circle = elemBlockEnter.append('circle')
+            .attr('r', function(d,i){ if (i>2){return 0;} return 25;})
+            .style('fill', 'black')
+            .attr('stroke', 'white')
+            .attr('stroke-width', '2px')
+
+    elemBlockEnter.append('svg:text')
+      .attr('text-anchor', 'middle')
+      .style('fill', 'white')
+      .attr('background-color', 'green')
+      .attr('font-size', function(d,i){if (i>2){return '14px';} return '28px';})
+      .attr('dy', '8px')
+      .text(function(d,i){return d;});
+
+    elemBlockEnter.append('rect')
+      .attr('transform', 'translate(0,'+0.8*h+')')
+      .attr('background-color', 'black')
+      .attr('width', function(d,i){if (i>2){ return w} return 0;} )
+      .attr('height', '20px')
+
+
+    var learnBlock = canvas.selectAll('g-learn')
+                            .data([1,2]);
+
+    var learnBlockEnter = learnBlock.enter()
+                                .append('g-learn')
+                                .attr('transform', 'translate('+w/2+','+(0.8)*h+')');
+
+    learnBlockEnter.append('svg:text')
+      .attr('text-anchor', 'middle')
+      .style('fill', 'white')
+      .attr('font-size', '28px')
+      .attr('dy', '8px')
+      .text('Learn');
+  })
+
   $('.product-grid-item').hover(function(){
     var prod_handle = $(this)[0].getAttribute('data-product');
     var prod_url = $(this)[0].getAttribute('data-url');
     var $item_holder = $(this)
 
-    $item_holder.css('background-color', 'black');
-    $item_holder.css('opacity', 0.3);
-    $item_holder.html('<span style="position:absolute;padding-top:'+$item_holder.height()/2+'px;padding-left:'+$item_holder.width()/2+'px;left:-15px;top:-15px;"><a href="'+prod_url+'?quantity=5">{{ "fancy_close.png" | asset_url | img_tag }}</a></span>');
+    $('.hover-'+$(this).attr('id')).fadeIn(250);
+
   }).mouseleave(function(){
-      $(this).css('background-color', 'black');
-      $(this).css('opacity', 1);
-      $(this).html(''); //destroys product right now
+    $('.hover-'+$(this).attr('id')).fadeOut(250);
   })
 
   // if a filter is clicked

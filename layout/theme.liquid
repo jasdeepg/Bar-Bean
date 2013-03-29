@@ -62,6 +62,8 @@
 
   {{ 'jquery.isotope.min.js' | asset_url | script_tag }}
 
+  {{ 'd3.v2.js' | asset_url | script_tag }}
+
 </head>
 
 <body class="{% if customer %}customer-logged-in {% endif %}template{{ template | split: '.' | first | camelize }}">
@@ -99,24 +101,29 @@
       </div>
   </div>
 
+<!-- top-left/top-right -->
+<div id='market-highlight'>
+  FREE SHIPPING FOR ORDERS OVER $50
+</div>
+
 <div id="umbrella">
 
   <ul>  
     {% if shop.customer_accounts_enabled %}
       {% if customer %}
       <li>
-        Welcome {{ customer.first_name }} {{ '(Log out)' | customer_logout_link }}
+        Welcome {{ customer.first_name }} {{ '(LOG OUT)' | customer_logout_link }}
       </li>
       <li>
         <a href="/account">My Account</a>
       </li>
       {% else %}
       <li>
-        {{ 'Log in' | customer_login_link }}
+        {{ 'LOG IN' | customer_login_link }}
       </li>
       {% if shop.customer_accounts_optional %} 
       <li>
-        {{ 'Create an account' | customer_register_link }}
+        {{ 'REGISTER' | customer_register_link }}
       </li>
       {% endif %}
       {% endif %}
@@ -132,52 +139,7 @@
 
   </ul>
   <div class="cart-link">
-    <a href="#">
-      <span class="icon">
-       CART ({{ cart.item_count }})
-      </span>
-    </a>
-    <div class='cart-panel'>
-      <div class='row'>
-        <div id='checkout-action-button' class='large-6 columns'>
-          <a href="/cart/add" class='button alert'>Checkout</a>
-        </div>
-        <div class='large-6 columns'>
-          <div class='row'>
-            <p style='float:right'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'bar', 'bars' }}</p>
-          </div>
-          <div class='row'>
-            {% assign total_price = cart.total_price/100 %}
-            <p style='float:right' class='price'></p>
-            <script type="text/javascript">
-              var overall_price = 0;
-              var $prices = $('.product-preview .price');
-
-              $('.price').html('$ '+ {{ cart.total_price }}/100)
-            </script>
-          </div>
-        </div>
-      </div>
-      <!-- display 5 items [# of items in cart + suggestive blanks] -->
-      {% for item in cart.items %}
-        <div class='product-preview row' id='product-{{ item.id }}'>
-          <img class='large-2 columns' src="{{ item.product.featured_image | product_img_url: 'small' }}">
-          <div class='large-8 columns' id='description'>
-            <p>{{ item.vendor }}</p>
-            <p>{{ item.title }}</p>
-            <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
-            <script type="text/javascript">
-              var total_price = {{ item.price }}*{{ item.quantity }}/100;
-              console.log('price ' + {{ item.price }}/100 )
-              console.log('quant ' + {{ item.quantity }})
-              console.log(total_price)
-              $('#product-{{ item.id }} #description').append('<p class="price">$'+total_price+'</p>')
-            </script>
-          </div>
-        </div>
-        <hr>
-      {% endfor %}
-    </div>
+    {% include 'cart' %}
   </div>
 </div>
 
@@ -213,9 +175,25 @@
     
       <div id='nav-2'>
       </div>
-      <div id='market-title-{{ template | split: '.' | upcase }}' class='logo-title'>
+      <div id='market-title-{{ template | split: '.' | lowercase }}' class='logo-title'>
         {% if template == 'product' %}
           <p>{{ product.title | upcase }}</p>
+        {% endif %}
+        {% if template == 'index' %}
+        <div class='index-title'>
+          <div class='row'>
+            <div class='large-6 columns large-offset-1'>
+              FIND YOUR
+            </div>
+          </div>
+          <div class='row'>
+            <div class='large-6 columns large-offset-5'>
+              PERFECT BAR.
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if template == 'collection' %}
         {% endif %}
       </div>
     </div>
