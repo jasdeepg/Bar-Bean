@@ -1,17 +1,24 @@
 <div id="col-main" class="{{ collection.handle }}">
-    <div class='row'>
+{% assign gridFlag = false %}
+
+  <div id='nav-select'>
+    <button class='grid-select'>Grid</button>
+    <button class='bars'>Bars</button>
+  </div>
+
+  <div id='filters'>
     <div class='options row'>
       <ul class='option-set large-2 columns' id='sort-filters' data-option-key='sortBy'>
         <label> Sort by: </label>
         <li><a href='#options' class='option-value' data-option-value='percent'></a> Percent</li>
         <li><a href='#options' class='option-value' data-option-value='popularity'></a> Popularity</li>
       </ul>
-      <ul class='option-set large-2 columns' id='batch-filters' data-option-key='filter'>
+      <!--<ul class='option-set large-2 columns' id='batch-filters' data-option-key='filter'>
         <label> Batch size: </label>
         <li><a href='#options' class='option-value' data-option-value='.artisan'></a> Small-batch</li>
         <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
-      </ul>
-      <ul class='option-set large-4 columns' id='region-filters' data-option-key='filter'>
+      </ul>-->
+      <ul class='option-set large-5 columns' id='region-filters' data-option-key='filter'>
         <label> Bar produced in: </label>
         <li><a href='#options' class='option-value' data-option-value='.NE'></a> Northeast</li>
         <li><a href='#options' class='option-value' data-option-value='.SE'></a> Southeast</li>
@@ -19,7 +26,7 @@
         <li><a href='#options' class='option-value' data-option-value='.SW'></a> Southwest</li>
         <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
       </ul>
-      <ul class='option-set large-4 columns' id='region-filters' data-option-key='filter'>
+      <ul class='option-set large-5 columns' id='region-filters' data-option-key='filter'>
         <label> Flavor: </label>
         <li><a href='#options' class='option-value' data-option-value='.chocolatey'></a> Chocolatey</li>
         <li><a href='#options' class='option-value' data-option-value='.citrus'></a> Citrus</li>
@@ -32,13 +39,28 @@
     </div>
   </div>
 
-    {% paginate collection.products by 100 %}
+  <div id='bars-view'>
       {% if collection.products.size > 0 %}
-    
         <div class="product-grid clearfix isotope">
           {% for product in collection.products %}
-            <div class='item {{ product.metafields.image.orientation }} {% for tag in product.tags %} {{tag}} {% endfor %}'>
+            <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
               {% include 'product-grid-item' %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}    
+        <strong>No products found in this collection.</strong>
+      {% endif %}
+  </div>
+
+  <div id='grid-view' style='display:none'>
+    <br>
+    {% paginate collection.products by 10 %}
+      {% if collection.products.size > 0 %}
+        <div class="product-grid-grid clearfix">
+          {% for product in collection.products %}
+            <div class='{% for tag in product.tags %} {{tag}} {% endfor %}'>
+              {% include 'product-grid-item-OLD' %}
             </div>
           {% endfor %}
         </div>
@@ -49,6 +71,7 @@
         <strong>No products found in this collection.</strong>
       {% endif %}
     {% endpaginate %}
+  </div>
   </section>
   
 </div> <!-- /#col-main -->
@@ -68,11 +91,29 @@
     });
   });
 
+  $('.bars').click(function(){
+    if ($('#grid-view').is(':visible')){
+      $('#grid-view').hide();
+    }
+    $('#bars-view').show();
+    $('.product-grid').isotope('reLayout');
+  })
+  $('.grid-select').click(function(){
+    if ($('#bars-view').is(':visible')){
+      $('#bars-view').hide();
+    }
+    $('#grid-view').show();
+  })
+
   $('.product-grid').children('.item').children('.product-grid-item').each(function(){
     var dataset=[1,5,'+', 'Learn'];
     var w = $(this).width(),
         h = $(this).height(), 
         sep = 70; 
+
+    var prod_id = $(this)[0].getAttribute('data-id');
+
+    var links = ['quantity=1&id='+prod_id, 'quantity=5&id='+prod_id];
 
     console.log(w+' '+h);
 

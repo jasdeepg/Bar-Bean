@@ -25,19 +25,25 @@
         </div>
       </div>
       {% for item in cart.items %}
-        <div class='product-preview row' id='product-{{ item.id }}'>
+        <div class='product-preview row' id='product-cart-{{ item.id }}'>
           <img class='large-2 columns' src="{{ item.product.featured_image | product_img_url: 'small' }}">
           <div class='large-8 columns' id='description'>
-            <p>{{ item.vendor }}</p>
-            <p>{{ item.title }}</p>
-            <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
+            <div class='row'>
+              <div class='large-9 columns' style='padding:0'>
+                <p>{{ item.vendor }}</p>
+                <p>{{ item.title }}</p>
+              </div>
+              <div class='large-3 columns' id='left-cart-desc-side' style='padding:0'>
+                <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
+              </div>
+            </div>
           </div>
           <script type="text/javascript">
             var total_price = {{ item.price }}*{{ item.quantity }}/100;
             console.log('price ' + {{ item.price }}/100 )
             console.log('quant ' + {{ item.quantity }})
             console.log(total_price)
-            $('#product-{{ item.id }} #description').append('<p class="price">$'+total_price+'</p>')
+            $('#product-cart-{{ item.id }} #left-cart-desc-side').append('<p class="price">$'+total_price+'</p>')
           </script>
         </div>
         <hr>

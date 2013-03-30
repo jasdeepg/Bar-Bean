@@ -1,5 +1,29 @@
- {% comment %}<a href="{{ product.url | within: collection }}" class="product-link" title="{{ product.featured_image.alt | escape }}">
+
     
+    <div class='row product-grid-type-item' style='margin:0;max-width:none;height:200px'>
+      <a href="{{product.url}}">
+      <div class='large-3 columns bar-image' style='background: url("{{ product.featured_image | product_img_url: "medium" }}") center center no-repeat'>
+      </div></a>
+      <div class='large-7 columns'>
+        <div class='row' style='font-family:"brandon-blk"'>
+          {{ product.vendor }}
+          <br>
+          {{ product.title }}
+          <br>
+          {{ product.price | money_with_currency }}
+        </div>
+        <br>
+        <div class='row' style='font-family:"brandon-reg"'>
+          Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. 
+        </div>
+      </div>
+      <div class='large-2 columns'>
+        <button>Add to cart</button>
+      </div>
+    </div>
+    <hr>
+
+    {% comment %}
     <span class="product-price{% if product.compare_at_price > product.price %} sale{% endif %}">
       {% if product.available %}
       {% if product.price_varies %} 
@@ -16,8 +40,8 @@
     </span>
     <img src="{{ product.featured_image | product_img_url: 'medium' }}" class="product-photo" alt="{{ product.featured_image.alt | escape }}" /> 
 
-  </a>{% endcomment %}
   
-  {% comment %} <div class="product-information">
+  <div class="product-information">
     <a href="{{ product.url | within: collection }}">{{ product.title }}</a>                    
-  </div> {% endcomment %}
+  </div> 
+  {% endcomment %}
