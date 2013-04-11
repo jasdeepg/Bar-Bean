@@ -11,14 +11,9 @@
           {% include 'product-grid-item' %}
         </div>
     {% endfor %}
-    {% for product in collections.popular-1.products %}
-        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
-          {% include 'product-grid-item' %}
-        </div>
-    {% endfor %}
   </div>
   <div class='row view-more'>
-    VIEW ALL PRODUCTS
+    <a href='http://lp-beta.myshopify.com/collections/all'>VIEW ALL PRODUCTS</a>
   </div>
 </section>
 
@@ -57,7 +52,7 @@
     {% endfor %}
   </div>
   <div class='row view-more'>
-    VIEW ALL PRODUCTS
+    <a href='http://lp-beta.myshopify.com/collections/all'>VIEW ALL PRODUCTS</a>
   </div>
 </section>
 

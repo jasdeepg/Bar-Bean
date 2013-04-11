@@ -1,40 +1,24 @@
     <a href="#">
       <span class="icon">
-       {{ 'cart.png' | asset_url | img_tag }}({{ cart.item_count }})
+       {{ 'cart.png' | asset_url | img_tag }}(<span id='cart-count'>{{ cart.item_count }}</span>)
       </span>
     </a>
     <div class='cart-panel'>
-      <div class='row'>
-        <div id='checkout-action-button' class='large-6 columns'>
-          <a href="/cart/add" class='button alert' style='float:left'>Checkout</a>
-        </div>
-        <div class='large-6 columns'>
-          <div class='row'>
-            <p style='float:right'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'bar', 'bars' }}</p>
-          </div>
-          <div class='row'>
-            {% assign total_price = cart.total_price/100 %}
-            <script type="text/javascript">
-              var overall_price = 0;
-              var $prices = $('.product-preview .price');
-
-              $('.price').html('$ '+ {{ cart.total_price }}/100)
-            </script>
-            <p style='float:right' class='price'></p>
-          </div>
-        </div>
-      </div>
+      <hr style='margin-top:10px;margin-bottom:10px'>
+      SHOPPING CART
+      <hr style='margin-top:10px;margin-bottom:10px'>
+      <div id='product-rows-grid'>
       {% for item in cart.items %}
         <div class='product-preview row' id='product-cart-{{ item.id }}'>
-          <img class='large-2 columns' src="{{ item.product.featured_image | product_img_url: 'small' }}">
+          <div class='large-3 columns bar-image' style="width:150px;height:150px;background: url('{{ item.product.featured_image | product_img_url: 'large' |}}') center center no-repeat;background-size:cover"></div>
           <div class='large-8 columns' id='description'>
-            <div class='row'>
+          <div class='row'>
               <div class='large-9 columns' style='padding:0'>
-                <p>{{ item.vendor }}</p>
-                <p>{{ item.title }}</p>
+                <p>{{ item.vendor | upcase}}</p>
+                <p>{{ item.title | upcase}}</p>
               </div>
               <div class='large-3 columns' id='left-cart-desc-side' style='padding:0'>
-                <p>{{ item.quantity }} {{ item.quantity | pluralize: 'bar', 'bars'}} </p>
+                <p>{{ item.quantity }} {{ item.quantity | pluralize: 'BAR', 'BARS'}} </p>
               </div>
             </div>
           </div>
@@ -48,4 +32,24 @@
         </div>
         <hr>
       {% endfor %}
+    </div>
+      <div class='row'>
+        <div id='checkout-action-button' class='row'>
+          <a href="/cart/add" class='button alert'>CHECKOUT</a>
+        </div>
+        <div class='cart-summary'>
+          <div class='row'>
+            <p id='total-cart-count' style='text-align:center'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'BAR', 'BARS' }}</p>
+          </div>
+          <div class='row'>
+            {% assign total_price = cart.total_price/100 %}
+            <script type="text/javascript">
+              var overall_price = 0;
+
+              $('.price').html('$ '+ {{ cart.total_price }}/100)
+            </script>
+            <p style='text-align:center' class='price'></p>
+          </div>
+        </div>
+      </div>
     </div>

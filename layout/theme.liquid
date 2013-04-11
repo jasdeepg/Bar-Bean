@@ -70,16 +70,15 @@
 
 
 
-  <div class='row'>
-    <div id='brand-equity' style='font-family:"brandon-reg";text-align:center;font-size:10px'>A SHOP BY <a href='http://www.lolliandpops.com'>LOLLI AND POPS</a></div>
+  <div class='row' style='margin-top:32px;margin-bottom:32px'>
     <div style='font-family:"brandon-blk";text-align:center;font-size:60px'>BAR + BEAN</div>
+        <div id='brand-equity' style='font-family:"brandon-reg";text-align:center;font-size:10px'>A SHOP BY <a href='http://www.lolliandpops.com'>LOLLI AND POPS</a></div>
   </div>
-  <hr style='margin-top:0px;margin-bottom:10px;'/>
   <div class='row' style='margin-bottom:33px'>
           <div class='search' style='position:absolute;left:10px'>
             <img src="{{ 'search.png' | asset_url }}"></img>
           </div>
-          <div class="cart-link" style='position:absolute;right:10px'>
+          <div class="cart-link" id='cart-anchor' style='position:absolute;right:10px'>
             {% include 'cart' %}
           </div>
       <div id='nav-1'>
@@ -188,7 +187,7 @@
         {% if template == 'index' %}
         <div class='index-title'>
           <div class='row'>
-            <div class='large-4 large-centered columns'>
+            <div class='large-5 large-centered columns'>
               CHOCOLATE IS WORTH SAVORING
             </div>
           </div>
@@ -224,6 +223,122 @@
     </footer>
 
   </div><!-- /.wrapper -->
+
+  <!-- script to add cart directly from any page -->
+  <script type="text/javascript">
+      $('.product-grid-item').hover(function(){
+        var prod_handle = $(this)[0].getAttribute('data-product');
+        var prod_url = $(this)[0].getAttribute('data-url');
+        var $item_holder = $(this)
+
+        $('#hover-modal-'+prod_handle).fadeIn(250);
+
+      }).mouseleave(function(){
+        var prod_handle = $(this)[0].getAttribute('data-product');
+        
+        $('#hover-modal-'+prod_handle).fadeOut(250);
+      })
+
+    $('.action-buy').click(function(){
+      $('.cart-panel').hide()
+      console.log('this' + $(this).attr('class'));
+      console.log('this parent' + $(this).parent().attr('class'));
+      console.log('this parent parent' + $(this).parent().parent().attr('class'))
+      console.log('this parent parent' + $(this).parent().parent().parent().attr('class'))
+
+      var $product_div = $(this).parent().parent().parent();
+      var prod_id = $product_div.attr('data-id');
+      var prod_handle = $product_div.attr('data-product');
+
+      console.log($('#form-'+prod_id).serialize())
+
+      console.log($product_div);
+      console.log('quantity=1&id='+prod_id);
+
+      var data = $('#form-'+prod_id).serialize();
+      var url_post = 'cart/add';
+      var url_get = 'cart';
+
+      var posting = $.ajax({
+        type: 'POST',
+        url: url_post, 
+        data: data,
+        dataType: 'json',
+        success: function(response){ alert('success caro'); 
+            var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            success: function(response){ alert('success caro'); 
+              console.log(response);
+              console.log(response.item_count)
+              $('#cart-count').html(response.item_count)
+              $('#product-rows-grid').html('');
+              $.each(response.items, function(i,item){
+                console.log(item);
+                addCartUX(item);
+              });
+
+              //update total price
+              var total_cart_price = response.total_price
+              var total_cart_items = response.item_count;
+              $('.price').html('$ ' + total_cart_price/100)
+              $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
+
+              //make cart panel appear for 5 seconds
+              $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
+              $('.cart-panel').show();
+              $('.cart-panel').animate({
+                top:''
+              },700, function(){
+                $('.cart-panel').delay(5000).fadeOut('slow')
+              })
+
+            },
+            error: function(){alert('failed caro') }
+          })
+        },
+        error: function(){alert('failed caro') }
+      });
+
+    })
+
+  function addCartUX(item){
+    var item_id = item.id;
+    var item_title = item.title;
+    var item_vendor = item.vendor;
+    var item_quantity = item.quantity;
+    var item_price = item.price; 
+    var item_pic_url = item.image;
+    var item_price = item.line_price;
+
+    console.log(item.image);
+    var $img_container = $('<div class="large-3 columns bar-image" style="width:150px;height:150px;background: url(\''+item_pic_url+'\') center center no-repeat;background-size:cover" />');
+    var $info_container = $('<div class="large-8 columns" id="description" />')
+      var $info_row = $('<div class="row">')
+        var $info_description = $('<div class="large-9 columns" style="padding:0"><p>'+item_vendor.toUpperCase()+'</p><p>'+item_title.toUpperCase()+'</p></div><div class="large-3 columns" id="left-cart-desc-side" style="padding:0"><div class="row" style="margin-right:0"><p>'+item_quantity+' '+ pluralizeBars(item_quantity).toUpperCase()+'</p></div><div class="row" style="margin-right:0"><p>$'+item_price/100+'</p></div></div>')
+
+    $info_row.append($info_description);
+    $info_container.append($info_row);
+
+    var $row_container = $('<div class="product-preview row" id="product-cart-'+item.id+'" />')
+
+    $row_container.append($img_container);
+    $row_container.append($info_container);
+
+    $('#product-rows-grid').append($row_container);
+  }
+
+  function pluralizeBars(num){
+    if (num == 1) {
+      return 'bar';
+    }
+    else {
+      return 'bars';
+    }
+  }
+  </script>
+  <!-- end of add-cart script -->
 
   <!--[if lt IE 8]>
   <script>
