@@ -75,11 +75,11 @@
     <div style='font-family:"brandon-blk";text-align:center;font-size:60px'>BAR + BEAN</div>
   </div>
   <hr style='margin-top:0px;margin-bottom:10px;'/>
-  <div class='row'>
-              <div class='search' style='position:absolute;left:0'>
-            SEARCH
+  <div class='row' style='margin-bottom:33px'>
+          <div class='search' style='position:absolute;left:10px'>
+            <img src="{{ 'search.png' | asset_url }}"></img>
           </div>
-                    <div class="cart-link" style='position:absolute;right:0'>
+          <div class="cart-link" style='position:absolute;right:10px'>
             {% include 'cart' %}
           </div>
       <div id='nav-1'>
@@ -188,7 +188,7 @@
         {% if template == 'index' %}
         <div class='index-title'>
           <div class='row'>
-            <div class='large-8 large-centered columns'>
+            <div class='large-4 large-centered columns'>
               CHOCOLATE IS WORTH SAVORING
             </div>
           </div>

@@ -1,6 +1,6 @@
     <a href="#">
       <span class="icon">
-       CART ({{ cart.item_count }})
+       {{ 'cart.png' | asset_url | img_tag }}({{ cart.item_count }})
       </span>
     </a>
     <div class='cart-panel'>

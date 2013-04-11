@@ -221,7 +221,6 @@ body { text-align: center; }
   /*margin: 0 auto;*/
   /*padding: 0 20px;*/
   text-align: left;
-  background-color: rgb(240,240,240);
   }
 .ie6 .wrapper{ height: 100%; }
 
@@ -1867,29 +1866,29 @@ a.btn:hover{
 .ver3 {display:none;}
 
 
-.dand-size {height:230.77px; width:106.7px;}
+.dand-size {height:382.08px; width:176.66px;}
 
-.patric-size {width: 215.24px; height:106.7px;}
+.patric-size {width: 480.68px; height:238.28px;}
 
-.lt-size {height: 228.64px; width: 106.7px;}
+.lt-size {height: 493px; width: 230.07px;}
 
-.mast-size {height: 229.64px; width: 106.7px;}
+.mast-size {height: 407px; width: 188px;}
 
-.rit-size {height: 320.1px; width: 106.7px;}
+.rit-size {height: 394.4px; width: 197.2px;}
 
-.ee-size {width: 217.85px; height: 106.7px;}
+.ee-size {width: 402.62px; height: 197.2px;}
 
-.rogue-size {height: 231.18px; width: 106.7px;}
+.rogue-size {height: 485.68px; width: 221.85px;}
 
-.pd-size {height: 217.67px; width: 106.7px;}
+.pd-size {height: 419.05px; width: 205.42px;}
 
-.cl-size {width: 211.13px; height: 106.7px;}
+.cl-size {width: 382.08px; height: 193.09px;}
 
-.es-size {height: 218.14px; width: 106.7px;}
+.es-size {height: 377.97px; width: 184.88px;}
 
-.escazu-size {height: 217.85px; width: 106.7px;}
+.escazu-size {height: 402.62px; width: 197.2px;}
 
-.theo-size {height: 253.41px; width: 106.7px;}
+.theo-size {height: 468.35px; width: 197.2px;}
 
 /* Proportional pixels
 .dand-size {height:271.25px;width:125.42px;}
@@ -1930,7 +1929,8 @@ a.btn:hover{
 
 #nav-1 ul {
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 1000px;
   list-style: none;
   text-align: center;
   font-family: 'brandon-blk';
@@ -1945,6 +1945,39 @@ a.btn:hover{
 #nav-1 ul li.last {padding-right:0px !important;}
 
 #nav-select {position:absolute;top:5px;right:5px;}
+
+/*************
+* Index
+**************/
+
+.templateIndex .row {max-width: 200em;}
+
+.big-break {font-family:'brandon-blk';text-align:center;line-height:150px;height:150px;font-size:24px;}
+.minor-break {font-family:'brandon-blk';background-color:rgb(221,221,221);text-align:center;line-height:100px;height:100px;font-size:24px;}
+.view-more {font-family:'brandon-blk';text-align:center;line-height:100px;height:100px; font-size:13px;}
+
+
+.featured-info {margin-left:72px;}
+.featured-info > #emphasis {font-family:'brandon-blk';font-size:24px;margin-bottom:37px;margin-top:76px;}
+.featured-info > #description {font-family:'brandon-reg';font-size:24px;margin-bottom:37px;line-height:30px;}
+.featured-info > #more-link {font-family:'brandon-reg';font-size:24px;font-style:italic;text-decoration: underline;margin-bottom:54px;}
+
+.featured-products {width:1500px !important;}
+
+.featured .ver-big {height:630px;}
+.featured .hor-big {height:325px;}
+.featured .small-square {padding:0 !important;height:315px;}
+  #fact-pic1 {background: url('{{ "fact_1.png" | asset_url }}'); background-size:cover;}
+  #fact-pic2 {background: url('{{ "fact_2.png" | asset_url }}'); background-size:cover;}
+  #fact-pic3 {background: url('{{ "fact_3.png" | asset_url }}') 47% 50%; background-size:cover;}
+  #fact-pic4 {background: url('{{ "fact_4.png" | asset_url }}'); background-size:cover;}
+  #fact-pic5 {background: url('{{ "fact_5.png" | asset_url }}'); background-size:cover;}
+  #fact-vid {background: url('{{ "fact_vid.png" | asset_url }}') 50% 75%; background-size:cover;}
+
+  #artisan-pic1 {background: url('http://www.hhhhold.com/325x630/d'); background-size:cover;}
+  #artisan-pic2 {background: url('http://www.hhhhold.com/630x325/l'); background-size:cover;}
+  #artisan-pic3 {background: url('http://www.hhhhold.com/630x325/d'); background-size:cover;}
+  #artisan-vid {background: url('http://www.hhhhold.com/325x630/l'); background-size:cover;}
 
 /*************
 * Products page
@@ -1998,9 +2031,9 @@ a.btn:hover{
 .product-preview {padding-bottom:5px; text-align: left}
 
 /* Index */
-#market-index { position: relative; width: 100%; height: 300px; background: url('{{ "main_banner.jpg" | asset_url }}') 50% 33%;  background-size: cover;}
+#market-index { position: relative; width: 100%; height: 300px; background: url('{{ "banner_filler.png" | asset_url }}') 50% 78%;  background-size: cover;}
 .index-title {padding-top:8%; color:white;}
-.index-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:55px;}
+.index-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 .gifts-link { background: url('{{ "gift_shot.png" | asset_url }}') !important;  background-size: cover; }
 .bars-link {}
 .shipping-link {}
@@ -2020,6 +2053,40 @@ a.btn:hover{
 
 /* Cart */
 #market-cart { position: relative; width: 100%; height: 300px; background: url('http://www.hhhhold.com/2000x500/d');  background-size: cover; }
+
+/**
+* Test
+**/
+
+@media only screen and (min-device-width: 320px) and (max-device-width:480px) {
+
+
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width:1024px) {
+  .index-title .row div {
+    background-color: black;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .featured {
+    max-width: 1400px !important;
+    margin:0 auto!important;
+  }
+  .featured .hor-big {height:263px;}
+  .featured .small-square-art {height:370px;}
+}
+
+@media only screen and (min-width: 1999px) {
+  .featured {
+    max-width: 2000px !important;
+    margin:0 auto!important;
+  }
+  .featured .hor-big {height:261px;}
+  .featured .small-square-art {height:370px;}
+}
+
 
 /*************
 * Isotope

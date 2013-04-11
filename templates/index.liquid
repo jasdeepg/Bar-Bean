@@ -1,25 +1,81 @@
 <div id="col-main">
 
-<br>
-
-  <div class='row'>
-    <div id='market-square-list'>
-      <div class='market-square main-col bars-link'>
-        <div class='inner-box'>
-          <div class='float-title'><a href="#">BARS</a></div>
-        </div>
-      </div>
-      <div class='market-square main-col shipping-link'>
-        <div class='inner-box'>
-          <div class='float-title'>FREE SHIPPING OVER $50</div>
-        </div>
-      </div>
-      <div class='market-square last-col gifts-link'>
-        <div class='inner-box'>
-          <div class='float-title'><a href="#">GIFTS</a></div>
-        </div>
-      </div>
-    </div>
+<!--style all of this -->
+<section id='popular-products-section'>
+  <div class='row big-break'>
+    POPULAR PRODUCTS
   </div>
+  <div class='row featured-products'>
+    {% for product in collections.popular-1.products %}
+        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
+          {% include 'product-grid-item' %}
+        </div>
+    {% endfor %}
+    {% for product in collections.popular-1.products %}
+        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
+          {% include 'product-grid-item' %}
+        </div>
+    {% endfor %}
+  </div>
+  <div class='row view-more'>
+    VIEW ALL PRODUCTS
+  </div>
+</section>
+
+<!-- fact section -->
+<section id='featured-fact-section'>
+  <div class='row minor-break'>
+    COCOA BEANS FROM MADAGASCAR
+  </div>
+  <div class='row featured'>
+    {% include 'featured-fact-grid' %}
+  </div>
+</section>
+
+<!-- artisan section -->
+<section id='featured-artisan-section'>
+  <div class='row minor-break'>
+    ARTISAN OF THE WEEK
+  </div>
+  <div class='row featured'>
+    {% include 'featured-artisan-grid' %}
+  </div>
+
+  <div class='row big-break'>
+    PRODUCTS BY MAST BROTHERS
+  </div>
+  <div class='row featured-products'>
+    {% for product in collections.mast-brothers.products %}
+        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
+          {% include 'product-grid-item' %}
+        </div>
+    {% endfor %}
+    {% for product in collections.mast-brothers.products %}
+        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
+          {% include 'product-grid-item' %}
+        </div>
+    {% endfor %}
+  </div>
+  <div class='row view-more'>
+    VIEW ALL PRODUCTS
+  </div>
+</section>
+
+<!-- script for adding isotope support -->
+<script type="text/javascript">
+  $(function(){
+    $('.featured-products').isotope({
+      itemSelector :'.item',
+      masonry: {
+        columnWidth: 1
+      },
+      getSortData : {
+        percent : function ( $elem ) {
+          return $elem.attr('data-percent');
+        }
+      }
+    });
+  });
+  </script>
 
 </div><!-- /#col-main -->
