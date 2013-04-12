@@ -1,12 +1,12 @@
     <a href="#">
       <span class="icon">
-       {{ 'cart.png' | asset_url | img_tag }}(<span id='cart-count'>{{ cart.item_count }}</span>)
+       <span id='cart-img'>{{ 'cart.png' | asset_url | img_tag }}</span>(<span id='cart-count'>{{ cart.item_count }}</span>)
       </span>
     </a>
     <div class='cart-panel'>
-      <hr style='margin-top:10px;margin-bottom:10px'>
+      <hr style='margin-top:10px;margin-bottom:10px;'>
       SHOPPING CART
-      <hr style='margin-top:10px;margin-bottom:10px'>
+      <hr style='margin-top:10px;margin-bottom:10px;'>
       <div id='product-rows-grid'>
       {% for item in cart.items %}
         <div class='product-preview row' id='product-cart-{{ item.id }}'>
@@ -34,8 +34,8 @@
       {% endfor %}
     </div>
       <div class='row'>
-        <div id='checkout-action-button' class='row'>
-          <a href="/cart/add" class='button alert'>CHECKOUT</a>
+        <div id='checkout-action-button' class='large-12 columns'>
+          <a href="/cart/add" class='button alert' style='width:100%;margin-top:0px'>CHECKOUT</a>
         </div>
         <div class='cart-summary'>
           <div class='row'>

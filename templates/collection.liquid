@@ -1,43 +1,51 @@
+
+
+<div class='row options-style'>
+  <ul class='large-block-grid-4'>
+    <li><a href="#" data-dropdown='brand'>BRAND</a></li>
+    <li><a href="#" data-dropdown='bean'>BEAN CHARACTERISTICS</a></li>
+    <li><a href="#" data-dropdown='flavor-filters'>FLAVOR PROFILE</a></li>
+    <li><a href="#" data-dropdown='sort-filters'>SORT BY</a></li>
+  </ul>
+</div>
+
+    <ul class='f-dropdown options' id='sort-filters' data-dropdown-content data-option-key='sortBy'>
+      <li><a href='#options' class='option-value' data-option-value='percent'></a> Percent</li>
+      <li><a href='#options' class='option-value' data-option-value='popularity'></a> Popularity</li>
+    </ul>
+    <!--<ul class='option-set large-2 columns' id='batch-filters' data-option-key='filter'>
+      <label> Batch size: </label>
+      <li><a href='#options' class='option-value' data-option-value='.artisan'></a> Small-batch</li>
+      <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
+    </ul>-->
+    <ul class='f-dropdown options' id='region-filters' data-dropdown-content data-option-key='filter'>
+      <li><a href='#options' class='option-value' data-option-value='.NE'></a> Northeast</li>
+      <li><a href='#options' class='option-value' data-option-value='.SE'></a> Southeast</li>
+      <li><a href='#options' class='option-value' data-option-value='.NW'></a> Northwest</li>
+      <li><a href='#options' class='option-value' data-option-value='.SW'></a> Southwest</li>
+      <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
+    </ul>
+    <ul class='f-dropdown options' id='flavor-filters' data-dropdown-content data-option-key='filter'>
+      <li><a class='option-value' data-option-value='.chocolatey'>Chocolatey</a></li>
+      <li><a class='option-value' data-option-value='.citrus'>Citrus</a></li>
+      <li><a class='option-value' data-option-value='.fruity'>Fruity</a></li>
+      <li><a class='option-value' data-option-value='.floral'>Floral</a></li>
+      <li><a class='option-value' data-option-value='.earthy'>Earthy</a></li>
+      <li><a class='option-value' data-option-value='.nutty'>Nutty</a></li>
+      <li><a class='option-value' data-option-value='.spicy'>Spicy</a></li>
+    </ul>
+
 <div id="col-main" class="{{ collection.handle }}">
 {% assign gridFlag = false %}
 
+<div class='row' id='filter-breadcrumbs'>
+  <div id='show-filter-choices'></div>
   <div id='nav-select'>
     <button class='grid-select'>Grid</button>
     <button class='bars'>Bars</button>
   </div>
+</div>
 
-  <div id='filters'>
-    <div class='options row'>
-      <ul class='option-set large-2 columns' id='sort-filters' data-option-key='sortBy'>
-        <label> Sort by: </label>
-        <li><a href='#options' class='option-value' data-option-value='percent'></a> Percent</li>
-        <li><a href='#options' class='option-value' data-option-value='popularity'></a> Popularity</li>
-      </ul>
-      <!--<ul class='option-set large-2 columns' id='batch-filters' data-option-key='filter'>
-        <label> Batch size: </label>
-        <li><a href='#options' class='option-value' data-option-value='.artisan'></a> Small-batch</li>
-        <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
-      </ul>-->
-      <ul class='option-set large-5 columns' id='region-filters' data-option-key='filter'>
-        <label> Bar produced in: </label>
-        <li><a href='#options' class='option-value' data-option-value='.NE'></a> Northeast</li>
-        <li><a href='#options' class='option-value' data-option-value='.SE'></a> Southeast</li>
-        <li><a href='#options' class='option-value' data-option-value='.NW'></a> Northwest</li>
-        <li><a href='#options' class='option-value' data-option-value='.SW'></a> Southwest</li>
-        <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
-      </ul>
-      <ul class='option-set large-5 columns' id='region-filters' data-option-key='filter'>
-        <label> Flavor: </label>
-        <li><a href='#options' class='option-value' data-option-value='.chocolatey'></a> Chocolatey</li>
-        <li><a href='#options' class='option-value' data-option-value='.citrus'></a> Citrus</li>
-        <li><a href='#options' class='option-value' data-option-value='.fruity'></a> Fruity</li>
-        <li><a href='#options' class='option-value' data-option-value='.floral'></a> Floral</li>
-        <li><a href='#options' class='option-value' data-option-value='.earthy'></a> Earthy</li>
-        <li><a href='#options' class='option-value' data-option-value='.nutty'></a> Nutty</li>
-        <li><a href='#options' class='option-value' data-option-value='.spicy'></a> Spicy</li>
-      </ul>
-    </div>
-  </div>
 
   <div id='bars-view'>
       {% if collection.products.size > 0 %}
@@ -105,107 +113,26 @@
     $('#grid-view').show();
   })
 
-  /*$('.product-grid').children('.item').children('.product-grid-item').each(function(){
-    var dataset=[1,5,'+', 'Learn'];
-    var w = $(this).width(),
-        h = $(this).height(), 
-        sep = 70; 
-
-    var prod_id = $(this)[0].getAttribute('data-id');
-
-    var links = ['quantity=1&id='+prod_id, 'quantity=5&id='+prod_id];
-
-    console.log(w+' '+h);
-
-    var div_id = $(this).attr('id');
-
-    console.log(div_id);
-
-    var canvas = d3.select('#'+div_id)
-            .append('svg')
-            .attr('width', w)
-            .attr('height', h)
-
-    var elemBlock = canvas.selectAll('g')
-              .data(dataset);
-
-    if (w > h){
-      var elemBlockEnter = elemBlock.enter()
-                            .append('g')
-                            .attr('transform', function(d,i) {console.log('(data, i) '+ '('+d+','+i+') '+ ' (w, sep, i) ' + '('+w+','+sep+','+i+')'+' transform: '+ (((0.5)*w-sep)+i*sep)); if (i>2){return 'translate('+w/2+','+0.8*h+')';}return 'translate('+(((0.5)*w-sep)+(i*sep))+','+h/2+')';})
-                            .attr('display','none')
-                            .attr('class', 'hover-'+div_id)
-    }
-    else{
-      var elemBlockEnter = elemBlock.enter()
-                            .append('g')
-                            .attr('transform', function(d,i) {if (i>2){ return 'translate('+w/2+','+(((0.5)*h-(sep/1.2))+(i*(sep/1.2)))+')';} return 'translate('+w/2+','+(((0.5)*h-sep)+(i*sep))+')';})
-                            .attr('display','none')
-                            .attr('class', 'hover-'+div_id)
-    }
-
-    var circle = elemBlockEnter.append('circle')
-            .attr('r', function(d,i){ if (i>2){return 0;} return 25;})
-            .style('fill', 'black')
-            .attr('stroke', 'white')
-            .attr('stroke-width', '2px')
-
-    elemBlockEnter.append('svg:text')
-      .attr('text-anchor', 'middle')
-      .style('fill', 'white')
-      .attr('background-color', 'green')
-      .attr('font-size', function(d,i){if (i>2){return '14px';} return '28px';})
-      .attr('dy', '8px')
-      .text(function(d,i){return d;});
-
-    elemBlockEnter.append('rect')
-      .attr('transform', 'translate(0,'+0.8*h+')')
-      .attr('background-color', 'black')
-      .attr('width', function(d,i){if (i>2){ return w} return 0;} )
-      .attr('height', '20px')
-
-
-    var learnBlock = canvas.selectAll('g-learn')
-                            .data([1,2]);
-
-    var learnBlockEnter = learnBlock.enter()
-                                .append('g-learn')
-                                .attr('transform', 'translate('+w/2+','+(0.8)*h+')');
-
-    learnBlockEnter.append('svg:text')
-      .attr('text-anchor', 'middle')
-      .style('fill', 'white')
-      .attr('font-size', '28px')
-      .attr('dy', '8px')
-      .text('Learn');
-  })
-
-  $('.product-grid-item').hover(function(){
-    var prod_handle = $(this)[0].getAttribute('data-product');
-    var prod_url = $(this)[0].getAttribute('data-url');
-    var $item_holder = $(this)
-
-    $('.hover-'+$(this).attr('id')).fadeIn(250);
-
-  }).mouseleave(function(){
-    $('.hover-'+$(this).attr('id')).fadeOut(250);
-  })*/
-
   // if a filter is clicked
   // register which filters are active
   // make sure whatever product is on the page has that tag
   // repopulate page and masonry-ize it
 
-  $option_values = $('.options a');
+  var $option_values = $('.option-value');
   var options_hash = new HashTable({});
   var filters = [];
   var sorters = [];
 
+  console.log($option_values)
+
   // if any of the filters are clicked
   $option_values.click(function(){ 
+      console.log('this div '+ $(this).attr('class'));
+
     // find out if it's a filter or a sorter
     $option_key = $(this).parent().parent();
 
+    console.log('option key ' + $option_key.attr('class'))
     /////
     // REMOVE
     /////
@@ -234,8 +161,9 @@
       //  ADD
       /////
       // if it hasn't been clicked, select it and add it to the Hash
+      // TODO: put a check beside the filters that have been clicked
       $(this).addClass('selected');
-      $(this).css('background-color', 'black')
+      $(this).css('background-color', 'white')
       if ($option_key.attr('data-option-key')=='filter'){
         filters.push($(this).attr('data-option-value'))
         var filter_string = getFilterString(filters);
@@ -251,9 +179,20 @@
     }
     // run the filter/sorter and reload the grid
       var values = options_hash.values();
-      console.log(values)
+      console.log('values ' + values)
       var keys = options_hash.keys();
       console.log(keys)
+
+      var filter_list_item;
+      $('#show-filter-choices').html('');
+
+      $.each(filters, function(i,item){
+        filter_list_item = item.split('.')[1];
+        console.log(filter_list_item.toUpperCase());
+        $('#show-filter-choices').append(filter_list_item.toUpperCase() + ' <a class="option-value inline-summary" data-option-value=".chocolatey">X</a>'+' ');
+      })
+
+
       $.each(values, function(i,v){
         console.log('key ' + keys[i] + ' value ' + v)
         var options = {};

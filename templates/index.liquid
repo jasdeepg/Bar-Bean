@@ -5,7 +5,7 @@
   <div class='row big-break'>
     POPULAR PRODUCTS
   </div>
-  <div class='row featured-products'>
+  <div class='row featured-products-overall'>
     {% for product in collections.popular-1.products %}
         <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
           {% include 'product-grid-item' %}
@@ -39,7 +39,7 @@
   <div class='row big-break'>
     PRODUCTS BY MAST BROTHERS
   </div>
-  <div class='row featured-products'>
+  <div class='row featured-products-artisan'>
     {% for product in collections.mast-brothers.products %}
         <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
           {% include 'product-grid-item' %}

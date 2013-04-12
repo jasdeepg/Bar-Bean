@@ -1415,7 +1415,10 @@ col.checkout-delete{ width: 80px; }
  */
 
 #bottom{
-  padding: 15px 0;
+  background-color: black;
+  color:white;
+  padding-top: 50px;
+  padding-bottom: 0px;
   {% unless ((settings.footer_bg_colour == settings.bg_colour) and (settings.body_bg_img == "none")) %}
   padding-left: 20px;
   padding-right: 20px;
@@ -1426,7 +1429,6 @@ col.checkout-delete{ width: 80px; }
   clear: both;
   overflow: hidden;
   height: 1%;
-  background: {{ settings.footer_bg_colour }};
   color: {{ settings.footer_txt_colour }};
   }
 
@@ -1976,16 +1978,17 @@ a.btn:hover{
   #fact-pic5 {background: url('{{ "fact_5.png" | asset_url }}'); background-size:cover;}
   #fact-vid {background: url('{{ "fact_vid.png" | asset_url }}') 50% 75%; background-size:cover;}
 
-  #artisan-pic1 {background: url('http://www.hhhhold.com/325x630/d'); background-size:cover;}
-  #artisan-pic2 {background: url('http://www.hhhhold.com/630x325/l'); background-size:cover;}
-  #artisan-pic3 {background: url('http://www.hhhhold.com/630x325/d'); background-size:cover;}
-  #artisan-vid {background: url('http://www.hhhhold.com/325x630/l'); background-size:cover;}
+  #artisan-pic1 {background: url('{{ "artisan_1.png" | asset_url }}') 50% 13%; background-size:cover;}
+  #artisan-pic2 {background: url('{{ "artisan_2.png" | asset_url }}'); background-size:cover;}
+  #artisan-pic3 {background: url('{{ "artisan_3.png" | asset_url }}'); background-size:cover;}
+  #artisan-vid {background: url('{{ "artisan_4.png" | asset_url }}') 50% 44%; background-size:cover;}
 
 /*************
 * Products page
 **************/
 
 .hover-modal {
+  display:none;
   height:126px;
   width:126px;
   /*background-color:rgb(51,51,51);*/
@@ -2011,16 +2014,26 @@ a.btn:hover{
 .hover-modal .action {font-family:'brandon-blk'; font-size:19px;}
 
 /* Filter */
-.options {border:1px solid black; max-width: 44.5em !important}
-.options ul {list-style:none; margin-bottom:0;}
-.options #region-filters {  -moz-column-count: 2;
-    -moz-column-gap: 10px;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 10px;}
-.option-value {float:left;width:10px;height:10px;border:1px solid black; margin-top:7px; margin-right:5px;}
+.options-style {
+  margin-left:0px !important;
+  margin-right:0px !important;
+  max-width:200em !important;
+  height:80px;
+  text-align:center;
+  background:rgb(51,51,51);
+}
+
+.options-style ul {color:white;font-family:'brandon-blk';font-size:16px;line-height: 80px;}
+.options-style ul a {color:white;}
+.options-style ul a:hover {color:blue;}
+.options-style #region-filters {}
+.option-value {display:block;}
+.inline-summary {display:inline !important;color:black;}
 
 .helper{height:100%;}
 .bar-image {margin-left:10px;margin-right:10px;border:4px solid white;height:100%;}
+
+#filter-breadcrumbs {font-family:'brandon-blk';font-size:13px;height:100px;margin:0;line-height:100px;}
 
 /*************
 * Product detail page
@@ -2060,6 +2073,7 @@ a.btn:hover{
 .product-preview p {line-height: 1.3; margin-bottom: 0};
 
 #left-cart-desc-side p {float:right;}
+#cart-img img {display:inline;}
 
 /* Index */
 #market-index { position: relative; width: 100%; height: 300px; background: url('{{ "banner_filler.png" | asset_url }}') 50% 78%;  background-size: cover;}
@@ -2072,9 +2086,9 @@ a.btn:hover{
 
 /* Collection */
   /* find collection ID and fill in content */
-#market-collection { position: relative; width: 100%; height: 300px; background: url('http://www.hhhhold.com/2000x500/d');  background-size: cover;}
-#market-title-collection {}
-#market-title-collection p {background-color:black; top:40%; position: relative; vertical-align: middle; text-align: center; z-index:10; color:white;  font-size:45px;}
+#market-collection { position: relative; width: 100%; height: 300px; background: url('{{ "collection_header.png" | asset_url }}') 50% 52%;  background-size: cover;}
+.collection-title {padding-top:6%; color:white;}
+.collection-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 
 
 /* Products */
@@ -2084,6 +2098,12 @@ a.btn:hover{
 
 /* Cart */
 #market-cart { position: relative; width: 100%; height: 300px; background: url('http://www.hhhhold.com/2000x500/d');  background-size: cover; }
+
+/*************
+* Marketing banner
+**************/
+.footer-info {max-width:65em !important; color:white;font-size:17px;font-family:'brandon-reg';}
+.footer-info p {line-height:0em !important;}
 
 /**
 * Test
@@ -2107,10 +2127,14 @@ a.btn:hover{
   }
   .featured .hor-big {height:263px;}
   .featured .small-square-art {height:370px;}
-  .featured-products {
+  .featured-products-overall {
     margin-left: auto !important; 
     margin-right: auto !important; 
-    max-width: 1400px !important;}
+    max-width: 1430px !important;}
+  .featured-products-artisan {
+    margin-left: auto !important; 
+    margin-right: auto !important; 
+    max-width: 1190px !important;}
 }
 
 @media only screen and (min-width: 1999px) {
