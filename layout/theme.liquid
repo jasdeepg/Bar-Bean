@@ -64,18 +64,18 @@
 
   {{ 'd3.v2.js' | asset_url | script_tag }}
 
+  <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
+  <script src="http://vjs.zencdn.net/c/video.js"></script>
+
 </head>
 
 <body class="{% if customer %}customer-logged-in {% endif %}template{{ template | split: '.' | first | camelize }}">
 
-
-  <span style='position:fixed;top:5px;left:5px;'>HELLO</span>
-
-  <div class='row' style='margin-top:32px;margin-bottom:32px'>
+  <div class='row' style='color:rgb(118,118,118);margin-top:32px;margin-bottom:32px'>
     <div style='font-family:"brandon-blk";text-align:center;font-size:60px'>BAR & BEAN</div>
         <div id='brand-equity' style='font-family:"brandon-reg";text-align:center;font-size:10px'>A SHOP BY <a href='http://www.lolliandpops.com'>LOLLI AND POPS</a></div>
   </div>
-  <div class='row' style='margin-bottom:33px'>
+  <div class='row' id='top-pane' style='margin-bottom:33px'>
           <div class='search' style='position:absolute;left:10px'>
             <img src="{{ 'search.png' | asset_url }}"></img>
           </div>
@@ -247,6 +247,29 @@
 
   </div><!-- /.wrapper -->
 
+  <!-- fix nav to top on scroll -->
+  <script type="text/javascript">
+    /*$(document).scroll(function(){
+      console.log('hey')
+      if (document.body.scrollTop > $('#nav-1').position().top) {
+        $('#top-pane').css('position', 'fixed');
+        $('#top-pane').css('background', 'white');
+        $('#top-pane').css('z-index', '40');
+        $('#top-pane').css('top', '0px');
+        $('#top-pane').css('height', '33x');
+        $('#top-pane').css('border','1px solid black')
+        $('#top-pane').css('padding-top','10px')
+      }
+      else {
+        $('#top-pane').css('position', 'relative');
+        $('#top-pane').css('background', 'white');
+        $('#top-pane').css('z-index', '40');
+        $('#top-pane').css('top', '0');
+        $('#top-pane').css('border','')
+      }
+    })*/
+  </script>
+
   <!-- script to add cart directly from any page -->
   <script type="text/javascript">
       $('.product-grid-item').hover(function(){
@@ -262,25 +285,45 @@
         $('#hover-modal-'+prod_handle).fadeOut(250);
       })
 
+    // if learn is clicked
+    $('.action-learn').click(function(){
+      // need to get product data/img from JSON request
+      // what do i need to send to the URL to get my product info?**
+      var $product_div = $(this).parent().parent().parent();
+      var prod_handle = $product_div.attr('data-product');
+      var prod_id = $product_div.attr('data-id');
+
+      var get_product_url = '/products/'+prod_handle+'.js';
+      $.ajax({
+            type: 'GET',
+            url: get_product_url, 
+            dataType: 'json',
+            success: function(response){
+              // this is where the product stuff comes up
+              console.log(response.variants[0].id);
+              pop_up(response, prod_id);
+            }
+          });
+    })
+
+    // if buy is clicked
     $('.action-buy').click(function(){
       $('.cart-panel').hide()
-      console.log('this' + $(this).attr('class'));
-      console.log('this parent' + $(this).parent().attr('class'));
-      console.log('this parent parent' + $(this).parent().parent().attr('class'))
-      console.log('this parent parent' + $(this).parent().parent().parent().attr('class'))
-
+      // console.log('this' + $(this).attr('class'));
+      // console.log('this parent' + $(this).parent().attr('class'));
+      // console.log('this parent parent' + $(this).parent().parent().attr('class'))
+      // console.log('this parent parent' + $(this).parent().parent().parent().attr('class'))
       var $product_div = $(this).parent().parent().parent();
       var prod_id = $product_div.attr('data-id');
       var prod_handle = $product_div.attr('data-product');
 
-      console.log($('#form-'+prod_id).serialize())
-
-      console.log($product_div);
-      console.log('quantity=1&id='+prod_id);
+      // console.log($('#form-'+prod_id).serialize())
+      // console.log($product_div);
+      // console.log('quantity=1&id='+prod_id);
 
       var data = $('#form-'+prod_id).serialize();
-      var url_post = 'cart/add';
-      var url_get = 'cart';
+      var url_post = '/cart/add';
+      var url_get = '/cart';
 
       var posting = $.ajax({
         type: 'POST',
@@ -288,7 +331,7 @@
         data: data,
         dataType: 'json',
         success: function(response){
-            var get_cart_data = $.ajax({
+          var get_cart_data = $.ajax({
             type: 'GET',
             url: url_get, 
             dataType: 'json',
@@ -308,14 +351,17 @@
               $('.price').html('$ ' + total_cart_price/100)
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
-              //make cart panel appear for 5 seconds
+              //make cart panel appear for 3 seconds
               $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
               $('.cart-panel').show();
               $('.cart-panel').animate({
                 top:''
-              },700, function(){
-                $('.cart-panel').delay(5000).fadeOut('slow')
+              },1500, function(){
+                $('.cart-panel').delay(3000).fadeOut('slow')
               })
+
+              //notify
+              notify_about_purchase();
 
             },
             error: function(){alert('failed caro') }
@@ -323,8 +369,168 @@
         },
         error: function(){alert('failed caro') }
       });
-
     })
+
+  // if item is cleared from the cart
+  $('.clear-item').click(function() {
+    var prod_id = $(this).attr('data-id');
+    var url_post = '/cart/change';
+    var url_get = '/cart';
+    var post_data = 'quantity=0&id='+prod_id;
+
+    console.log(post_data)
+
+    var change = $.ajax({
+        type: 'POST',
+        url: url_post, 
+        data: post_data,
+        dataType: 'json',
+        success: function(){
+          alert('changed');
+          var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            success: function(response){
+              console.log(response);
+              console.log(response.item_count)
+              $('#cart-count').html(response.item_count)
+              $('#product-rows-grid').html('');
+              $.each(response.items, function(i,item){
+                console.log(item);
+                addCartUX(item);
+              });
+            },
+            error: function(){alert('failed caro') }
+          })
+        },
+        error: function(){alert('failed caro init') }
+      });
+    })
+
+  function pop_up(item){
+    // pop up hovering panel fixed some x pixels from top of screen, 375 px height
+    var where_i_am = $(document).scrollTop; // pixel position of top of window e.g. i've scrolled to this point
+
+    // remove any artifacts
+    $('#current-highlighted-product').remove('');
+    $('#focus-dim').remove();
+
+    // add popup modal for product
+    var $dim_outside = $('<div id="focus-dim"></div>')
+    var $container = $('<div class="row" id="current-highlighted-product">\
+                        \
+                        </div>')
+      var $pic_column = $("<div class='large-4 columns' style='padding:20px;height:100%'>\
+                            <div style='background: url(\""+item.featured_image+"\") center no-repeat; background-size: contain; height:100%'></div>\
+                          </div>") // put picture here
+      var $info_column = $('<div class="large-4 columns">\
+                              <ul>\
+                                <li>Fact 1</li>\
+                                <li>Fact 2</li>\
+                                <li>Fact 3</li>\
+                              </ul>\
+                              <i><u>Link to artisan profile</i></u>\
+                            </div>'); // put info highlights here (maybe from product description?)**
+      var $action_column = $('<div class="large-4 columns" style="padding:10px">\
+                                <div style="background:gray;padding:5px;">\
+                                  <div style="background:white;padding:3px;">\
+                                    <div class="large-12 columns">$'+item.price/100+'</div>\
+                                    <div class="large-12 columns"><a href="#cart-anchor" class=\'action-popup-buy\' data-id=\''+item.variants[0].id+'\' onclick="alert(\'clicked\');$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">action to buy 1</a></div>\
+                                    <div class="large-12 columns">action to buy 5</div>\
+                                    <div class="large-12 columns">action to buy 10</div>\
+                                  </div>\
+                                </div>\
+                              </div>'); // put actions here
+      var $close_window = $('<span style="position:absolute;top:5px;right:5px;">X</span>'); // this is the big X at the top right of the pop-up
+
+      $container.append($pic_column);
+      $container.append($info_column);
+      $container.append($action_column);
+      $container.append($close_window);
+      $('.wrapper').append($container);
+      $('body').append($dim_outside)
+
+      $('#current-highlighted-product').css('top', $(document).scrollTop()+50)
+      $('#focus-dim').css('height', $(document).height());
+
+
+    // panel should be populated with 1 row, 3 columns
+    // absolute positioned x-out icon in top right
+
+    // ability to purchase from hovering panel
+      // update cart count, etc.
+    // call method to animate cart when bought (optional)
+
+    //event for dim background
+    $('#focus-dim').click(function(){
+      $('#current-highlighted-product').remove();
+      $('#focus-dim').remove();
+    })
+
+    //event for purchasing
+    $('.action-popup-buy').click(function(){
+      alert('in here')
+      var prod_id = $(this).attr('data-id'); // grab product id from div
+      var quantity = 1;                      // buy one unit of product
+      purchase_product(prod_id, quantity);   // purchase product method call
+    })
+  }
+
+  function notify_about_purchase(){
+    $('#added-to-cart').remove();
+
+    var $top_strip = $('<div id=\'added-to-cart\'>ADDED TO YOUR BAG</div>');
+    $('body').append($top_strip);
+
+    //$('#added-to-cart').css('top', $(document).scrollTop())
+
+    $top_strip.delay(2000).fadeOut();
+  }
+
+  function purchase_product(prod_id, quantity){
+      var data = $('#form-popup-'+prod_id).serialize();
+      var post_data = 'quantity='+quantity+'&'+data;
+      var url_post = '/cart/add';
+      var url_get = '/cart';
+
+      var posting = $.ajax({
+        type: 'POST',
+        url: url_post, 
+        data: post_data,
+        dataType: 'json',
+        success: function(response){
+          var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            // change the notificaiton here -- purchase strip on top is better ...
+            success: function(response){
+              //console.log(response);
+              //console.log(response.item_count)
+              $('#cart-count').html(response.item_count)
+              $('#product-rows-grid').html('');
+              $.each(response.items, function(i,item){
+              //  console.log(item);
+                addCartUX(item);
+              });
+
+              //update total price
+              var total_cart_price = response.total_price
+              var total_cart_items = response.item_count;
+              $('.price').html('$ ' + total_cart_price/100)
+              $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
+
+              //need notification strip here ***** TODO!!
+              notify_about_purchase();
+
+            },
+            error: function(){alert('failed caro') }
+          })
+        },
+        error: function(){alert('failed caro init') }
+      });
+  }
 
   function addCartUX(item){
     var item_id = item.id;
@@ -336,20 +542,72 @@
     var item_price = item.line_price;
 
     console.log(item.image);
-    var $img_container = $('<div class="large-3 columns bar-image" style="width:150px;height:150px;background: url(\''+item_pic_url+'\') center center no-repeat;background-size:cover" />');
+    var $img_container = $('<div class="large-3 columns bar-image" style="width:150px;height:150px;background: url(\''+item_pic_url+'\') center center no-repeat;background-size:cover">'+item_quantity+'</div>');
     var $info_container = $('<div class="large-8 columns" id="description" />')
       var $info_row = $('<div class="row">')
-        var $info_description = $('<div class="large-9 columns" style="padding:0"><p>'+item_vendor.toUpperCase()+'</p><p>'+item_title.toUpperCase()+'</p></div><div class="large-3 columns" id="left-cart-desc-side" style="padding:0"><div class="row" style="margin-right:0"><p>'+item_quantity+' '+ pluralizeBars(item_quantity).toUpperCase()+'</p></div><div class="row" style="margin-right:0"><p>$'+item_price/100+'</p></div></div>')
+        var $info_description = $('<div class="large-9 columns" style="padding:0">\
+                                    <p>'+item_vendor.toUpperCase()+'</p>\
+                                    <p>'+item_title.toUpperCase()+'</p>\
+                                  </div>\
+                                  <div class="large-3 columns" id="left-cart-desc-side" style="padding:0">\
+                                    <div class="row" style="margin-right:0">\
+                                      <p>'+item_quantity+' '+ pluralizeBars(item_quantity).toUpperCase()+'</p>\
+                                    </div>\
+                                    <div class="row" style="margin-right:0">\
+                                      <p>$'+item_price/100+'</p>\
+                                    </div>\
+                                  </div>')
 
     $info_row.append($info_description);
     $info_container.append($info_row);
 
-    var $row_container = $('<div class="product-preview row" id="product-cart-'+item.id+'" />')
+    console.log('this is your item')
+    console.log(item);
+
+    var $row_container = $('<div class="product-preview row" id="product-cart-'+item.id+'" style="position:relative">\
+                              <div class=\'clear-item\' style=\'z-index:50;position:absolute;top:3px;right:3px;\' data-id=\''+item.variant_id+'\'>\
+                                X</div></div>')
 
     $row_container.append($img_container);
     $row_container.append($info_container);
 
     $('#product-rows-grid').append($row_container);
+
+    $('.clear-item').click(function() {
+      var prod_id = $(this).attr('data-id');
+      var url_post = '/cart/change';
+      var url_get = '/cart';
+      var post_data = 'quantity=0&id='+prod_id;
+
+      console.log(post_data)
+
+        var change = $.ajax({
+        type: 'POST',
+        url: url_post, 
+        data: post_data,
+        dataType: 'json',
+        success: function(){
+          alert('changed');
+          var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            success: function(response){
+              console.log(response);
+              console.log(response.item_count)
+              $('#cart-count').html(response.item_count)
+              $('#product-rows-grid').html('');
+              $.each(response.items, function(i,item){
+                console.log(item);
+                addCartUX(item);
+              });
+            },
+            error: function(){alert('failed caro') }
+          })
+        },
+        error: function(){alert('failed caro init') }
+      });
+    })
   }
 
   function pluralizeBars(num){

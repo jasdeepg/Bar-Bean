@@ -26,13 +26,13 @@
       <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
     </ul>
     <ul class='f-dropdown options' id='flavor-filters' data-dropdown-content data-option-key='filter'>
-      <li><a class='option-value' data-option-value='.chocolatey'>Chocolatey</a></li>
-      <li><a class='option-value' data-option-value='.citrus'>Citrus</a></li>
-      <li><a class='option-value' data-option-value='.fruity'>Fruity</a></li>
-      <li><a class='option-value' data-option-value='.floral'>Floral</a></li>
-      <li><a class='option-value' data-option-value='.earthy'>Earthy</a></li>
-      <li><a class='option-value' data-option-value='.nutty'>Nutty</a></li>
-      <li><a class='option-value' data-option-value='.spicy'>Spicy</a></li>
+      <li><a class='option-value' id='chocolatey' data-option-value='.chocolatey'>Chocolatey</a></li>
+      <li><a class='option-value' id='citrus' data-option-value='.citrus'>Citrus</a></li>
+      <li><a class='option-value' id='fruity' data-option-value='.fruity'>Fruity</a></li>
+      <li><a class='option-value' id='floral' data-option-value='.floral'>Floral</a></li>
+      <li><a class='option-value' id='earthy' data-option-value='.earthy'>Earthy</a></li>
+      <li><a class='option-value' id='nutty' data-option-value='.nutty'>Nutty</a></li>
+      <li><a class='option-value' id='spicy' data-option-value='.spicy'>Spicy</a></li>
     </ul>
 
 <div id="col-main" class="{{ collection.handle }}">
@@ -123,16 +123,18 @@
   var filters = [];
   var sorters = [];
 
-  console.log($option_values)
+  //console.log($option_values)
+
+  $option_values.on('click', apply_filter);
 
   // if any of the filters are clicked
-  $option_values.click(function(){ 
-      console.log('this div '+ $(this).attr('class'));
+  function apply_filter(){ 
+      //console.log('this div '+ $(this).attr('class'));
 
     // find out if it's a filter or a sorter
     $option_key = $(this).parent().parent();
 
-    console.log('option key ' + $option_key.attr('class'))
+    //console.log('option key ' + $option_key.attr('class'))
     /////
     // REMOVE
     /////
@@ -168,7 +170,7 @@
         filters.push($(this).attr('data-option-value'))
         var filter_string = getFilterString(filters);
 
-        console.log('filter clicked ' + filter_string)
+        //console.log('filter clicked ' + filter_string)
 
         options_hash.setItem($option_key.attr('data-option-key'), filter_string);
       }
@@ -177,29 +179,74 @@
         options_hash.setItem('sortAscending', false);
       }
     }
-    // run the filter/sorter and reload the grid
+      // run the filter/sorter and reload the grid
       var values = options_hash.values();
-      console.log('values ' + values)
+      //console.log('values ' + values)
       var keys = options_hash.keys();
-      console.log(keys)
+      //console.log(keys)
 
       var filter_list_item;
       $('#show-filter-choices').html('');
 
       $.each(filters, function(i,item){
         filter_list_item = item.split('.')[1];
-        console.log(filter_list_item.toUpperCase());
-        $('#show-filter-choices').append(filter_list_item.toUpperCase() + ' <a class="option-value inline-summary" data-option-value=".chocolatey">X</a>'+' ');
+        //console.log(filter_list_item.toUpperCase());
+        $('#show-filter-choices').append('<span data-option-key=\'filter\'>' +filter_list_item.toUpperCase() + ' <span><a class="inline-summary" data-option-value=\''+item+'\'>X</a></span></span>'+' ');
+        $('.inline-summary').on('click', remove_filter);
       })
 
-
       $.each(values, function(i,v){
-        console.log('key ' + keys[i] + ' value ' + v)
+        //console.log('key ' + keys[i] + ' value ' + v)
         var options = {};
         options[keys[i]] = v;
         $('.product-grid').isotope(options)
     });
-  })
+  }
+
+  function remove_filter(){
+    //alert('remove')
+     var $option_key = $(this).parent().parent();
+     var filter_item = $(this).attr('data-option-value').split('.')[1];
+     var $filter_option = $('#'+filter_item);
+
+    //console.log('option key ' + $option_key.attr('data-option-key'))
+    /////
+    // REMOVE
+    /////
+    // if it's already been clicked, unselect it and remove it from the Hash
+    if($filter_option.hasClass('selected')){
+      $filter_option.removeClass('selected');
+      $filter_option.css('background-color', 'white')
+
+      // if a filter has been clicked
+      if ($option_key.attr('data-option-key')=='filter'){
+        value_index = filters.indexOf($(this).attr('data-option-value'));
+        filters.splice(value_index,1);
+
+        var filter_string = getFilterString(filters);
+
+        options_hash.setItem($option_key.attr('data-option-key'), filter_string);
+      }
+      else{ // if a sorter has been clicked
+        options_hash.removeItem($option_key.attr('data-option-key'));
+        options_hash.removeItem('sortAscending');
+      }
+    }
+
+    var values = options_hash.values();
+    //console.log('values ' + values)
+    var keys = options_hash.keys();
+    //console.log(keys)
+
+    $.each(values, function(i,v){
+      //console.log('key ' + keys[i] + ' value ' + v)
+      var options = {};
+      options[keys[i]] = v;
+      $('.product-grid').isotope(options)
+    });
+
+    $option_key.remove();
+  }
 
   // Functions
 
