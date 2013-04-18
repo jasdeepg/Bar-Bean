@@ -16,10 +16,11 @@
           <div class='row'>
               <div class='large-9 columns' style='padding:0'>
                 <p>{{ item.vendor | upcase}}</p>
-                <p>{{ item.title | upcase}}</p>
+                <p id='product-cart-banner-title'>{{ item.title | upcase}}</p>
               </div>
               <div class='large-3 columns' id='left-cart-desc-side' style='padding:0'>
                 <p>{{ item.quantity }} {{ item.quantity | pluralize: 'BAR', 'BARS'}} </p>
+                <p class='price'></p>
               </div>
             </div>
           </div>
@@ -28,7 +29,7 @@
             console.log('price ' + {{ item.price }}/100 )
             console.log('quant ' + {{ item.quantity }})
             console.log(total_price)
-            $('#product-cart-{{ item.id }} #left-cart-desc-side').append('<p class="price">$'+total_price+'</p>')
+            $('#product-cart-{{ item.id }} .price').html('$'+total_price)
           </script>
         </div>
         <hr>
@@ -36,20 +37,19 @@
     </div>
       <div class='row'>
         <div id='checkout-action-button' class='large-12 columns'>
-          <a href="/cart/add" class='button alert' style='width:100%;margin-top:10px'>CHECKOUT</a>
+          <a href="/cart/add" class='button success' style='width:100%;margin-top:10px'>CHECKOUT/EDIT</a>
         </div>
         <div class='cart-summary'>
-          <div class='row'>
-            <p id='total-cart-count' style='text-align:center'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'BAR', 'BARS' }}</p>
+          <div class='large-12 columns'>
+            <p id='total-cart-count' style='text-align:center;font-family:"brandon-reg"'>{{ cart.item_count }} {{ cart.item_count | pluralize: 'BAR', 'BARS' }}</p>
           </div>
-          <div class='row'>
+          <div class='large-12 columns'>
+            <p style='text-align:center;font-family:"brandon-reg"' class='total-price'></p>
             {% assign total_price = cart.total_price/100 %}
             <script type="text/javascript">
               var overall_price = 0;
-
-              $('.price').html('$ '+ {{ cart.total_price }}/100)
+              $('.total-price').html('CART TOTAL: $ '+ {{ cart.total_price }}/100)
             </script>
-            <p style='text-align:center' class='price'></p>
           </div>
         </div>
       </div>

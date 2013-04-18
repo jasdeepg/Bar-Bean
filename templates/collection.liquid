@@ -33,6 +33,7 @@
       <li><a class='option-value' id='earthy' data-option-value='.earthy'>Earthy</a></li>
       <li><a class='option-value' id='nutty' data-option-value='.nutty'>Nutty</a></li>
       <li><a class='option-value' id='spicy' data-option-value='.spicy'>Spicy</a></li>
+      <li><a class='option-value' id='creamy' data-option-value='.creamy'>Creamy</a></li>
     </ul>
 
 <div id="col-main" class="{{ collection.handle }}">
@@ -48,6 +49,7 @@
 
 
   <div id='bars-view'>
+    {% paginate collection.products by 50 %}
       {% if collection.products.size > 0 %}
         <div class="product-grid clearfix isotope">
           {% for product in collection.products %}
@@ -56,9 +58,14 @@
             </div>
           {% endfor %}
         </div>
+
+        {% include 'pagination' %}
+
       {% else %}    
         <strong>No products found in this collection.</strong>
       {% endif %}
+    {% endpaginate %}
+
   </div>
 
   <div id='grid-view' style='display:none'>
@@ -85,9 +92,59 @@
 </div> <!-- /#col-main -->
 
 <script type="text/javascript">
+
+  // scratch JS
+  $('.dt-size').parent().remove();
+  $('.hor1').parent().remove();
+  $('.ver1').parent().remove();
+
+  var store_product_hash = new Array();
+  var i = 0;
+
+  {% for item in collection.products %}
+    store_product_hash.push('{{ item.handle }}');
+    i++;
+   // console.log(i);
+  {% endfor %}
+
+  console.log(store_product_hash)
+
+  var products_count = {{ collection.products_count }},
+      pages_count = Math.ceil(products_count / 50),   // I'm actually paginating by 25 here
+      base_url = location.pathname + "?page=",       // generate the paginated URLs
+      i = 2;
+
+  console.log('products_count ' + products_count);
+  console.log('pages_count ' + pages_count);
+  console.log('base_url ' + base_url);
+
+  if (pages_count > 1){
+    $('#pagination').hide(); // hide pagination links, originally left in to keep it unobtrusive
+
+    console.log('in mult pages ')
+    var getItems = function(){
+      collection = $('.product-grid');
+      console.log('getting')
+      for (i = 2; i <= pages_count;i++ ){     // loop through each paginated page
+        $.get(base_url + i, function(data){   // get all the html
+          var items = $(data).find('.item');  // find just the products
+          console.log(items);
+          //collection.append(items);  // append them to the page
+          //set_prod_hover_event();
+        });
+      }
+    }
+
+    getItems();
+  }
+
+  // end of scratch JS
+
+  // add to masonry
   $(function(){
     $('.product-grid').isotope({
       itemSelector :'.item',
+      layoutMode: 'masonry',
       masonry: {
         columnWidth: 1
       },
@@ -191,7 +248,7 @@
       $.each(filters, function(i,item){
         filter_list_item = item.split('.')[1];
         //console.log(filter_list_item.toUpperCase());
-        $('#show-filter-choices').append('<span data-option-key=\'filter\'>' +filter_list_item.toUpperCase() + ' <span><a class="inline-summary" data-option-value=\''+item+'\'>X</a></span></span>'+' ');
+        $('#show-filter-choices').append('<span data-option-key=\'filter\'>' +filter_list_item.toUpperCase() + ' <span><a class="inline-summary" style="cursor:pointer" data-option-value=\''+item+'\'>X</a></span></span>'+' ');
         $('.inline-summary').on('click', remove_filter);
       })
 

@@ -66,24 +66,31 @@
 
   <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
   <script src="http://vjs.zencdn.net/c/video.js"></script>
-
+  <script type="text/javascript">
+  (function(d){
+    var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
+    p.type = 'text/javascript';
+    p.setAttribute('data-pin-hover', true);
+    p.async = true;
+    p.src = '//assets.pinterest.com/js/pinit.js';
+    f.parentNode.insertBefore(p, f);
+  }(document));
+  </script>
 </head>
 
 <body class="{% if customer %}customer-logged-in {% endif %}template{{ template | split: '.' | first | camelize }}">
+    <div id='market-{{ template | split: '.' | lowercase }}' class='top-banner'>
 
-  <div class='row' style='color:rgb(118,118,118);margin-top:32px;margin-bottom:32px'>
-    <div style='font-family:"brandon-blk";text-align:center;font-size:60px'>BAR & BEAN</div>
-        <div id='brand-equity' style='font-family:"brandon-reg";text-align:center;font-size:10px'>A SHOP BY <a href='http://www.lolliandpops.com'>LOLLI AND POPS</a></div>
-  </div>
+<div id='menu-nav'>
   <div class='row' id='top-pane' style='margin-bottom:33px'>
-          <div class='search' style='position:absolute;left:10px'>
+      <div id='nav-1'>
+          <div class='search' style='position:absolute;left:10px;margin-top:4px'>
             <img src="{{ 'search.png' | asset_url }}"></img>
           </div>
-          <div class="cart-link" id='cart-anchor' style='position:absolute;right:10px'>
+          <div class="cart-link" id='cart-anchor' style='position:absolute;right:10px;margin-top:7px'>
             {% include 'cart' %}
           </div>
-      <div id='nav-1'>
-          <ul class='large-block-grid-4'>
+          <ul class='large-block-grid-5'>
             {% for link in linklists.main-menu.links %}
             <li class="{% if forloop.first %}first{% elsif forloop.last %}last{%endif%}">
               {% assign child_list_handle = link.title | handleize %}
@@ -103,11 +110,16 @@
                 <a href="{{ link.url }}">{{ link.title | escape | upcase }}</a>
               {% endif %}
             </li>
+              {% if forloop.index == 2 %}
+              <li class="{% if forloop.first %}first{% elsif forloop.last %}last{%endif%}">
+                <div style='font-family:"brandon-blk";text-align:center;font-size:28px'> {{ 'logo.png' | asset_url | img_tag }} <!--<a href='/' style='color:black'>BAR & BEAN</a></div>--></div>
+              </li>
+              {% endif %}
             {% endfor %}
           </ul>
-
       </div>
   </div>
+</div>
 
 <!-- top-left/top-right -->
 <div id='market-highlight'>
@@ -149,38 +161,7 @@
 
 </div>
 
-  <script type="text/javascript">
-    $('.cart-link a').click(function(){
-      console.log('clicked')
-      if ($('.cart-panel').is(':visible')){
-        $('.cart-panel').fadeOut(200);
-        //hide().animate({},250)
-      }
-      else{
-        console.log('clicked2')
-        $('.cart-panel').fadeIn(200);
-        //css('display', 'block').animate({},1000)
-      }
-    })
 
-    function showPanel(){
-      $('.cart-panel').fadeIn(200);
-      $('.cart-panel').css('display', 'block')
-    }
-
-    function testFunction(){
-      alert('test')
-    }
-  </script>
-
-    <div class="wrapper">
-
-
-    <div id='market-{{ template | split: '.' | lowercase }}'>
-    
-    
-      <div id='nav-2'>
-      </div>
       <div id='market-title-{{ template | split: '.' | lowercase }}' class='logo-title'>
         {% if template == 'product' %}
           <p>{{ product.title | upcase }}</p>
@@ -205,6 +186,53 @@
         {% endif %}
       </div>
     </div>
+
+  <script type="text/javascript">
+    var docked;
+    var buffer = 10;  
+
+    // lock menu-nav to top
+    $(document).scroll(function(){
+
+      if (!docked && $(document).scrollTop() > 0){
+        docked = true;
+        $('#menu-nav').css('background','rgba(60,60,60,0.9)');
+        $('#menu-nav').css('position', 'fixed');
+        $('#menu-nav').css('top',0)
+      }
+      else if (docked && $(document).scrollTop() < buffer) {
+        docked = false;
+        $('#menu-nav').css('background','');
+        $('#menu-nav').css('position', 'absolute');
+        $('#menu-nav').css('top',0)
+      }
+
+    })
+
+    $('.cart-link a').click(function(){
+      console.log('clicked')
+      if ($('.cart-panel').is(':visible')){
+        $('.cart-panel').fadeOut(200);
+        //hide().animate({},250)
+      }
+      else{
+        console.log('clicked2')
+        $('.cart-panel').fadeIn(200);
+        //css('display', 'block').animate({},1000)
+      }
+    })
+
+    function showPanel(){
+      $('.cart-panel').fadeIn(200);
+      $('.cart-panel').css('display', 'block')
+    }
+
+    function testFunction(){
+      alert('test')
+    }
+  </script>
+
+    <div class="wrapper">
 
     <!-- Content -->
     <div class="content-wrapper clearfix">
@@ -272,6 +300,9 @@
 
   <!-- script to add cart directly from any page -->
   <script type="text/javascript">
+
+    function set_prod_hover_event(){
+
       $('.product-grid-item').hover(function(){
         var prod_handle = $(this)[0].getAttribute('data-product');
         var prod_url = $(this)[0].getAttribute('data-url');
@@ -284,7 +315,6 @@
         
         $('#hover-modal-'+prod_handle).fadeOut(250);
       })
-
     // if learn is clicked
     $('.action-learn').click(function(){
       // need to get product data/img from JSON request
@@ -371,6 +401,8 @@
       });
     })
 
+  }
+
   // if item is cleared from the cart
   $('.clear-item').click(function() {
     var prod_id = $(this).attr('data-id');
@@ -412,6 +444,9 @@
     // pop up hovering panel fixed some x pixels from top of screen, 375 px height
     var where_i_am = $(document).scrollTop; // pixel position of top of window e.g. i've scrolled to this point
 
+    console.log('item');
+    console.log(item);
+
     // remove any artifacts
     $('#current-highlighted-product').remove('');
     $('#focus-dim').remove();
@@ -424,25 +459,25 @@
       var $pic_column = $("<div class='large-4 columns' style='padding:20px;height:100%'>\
                             <div style='background: url(\""+item.featured_image+"\") center no-repeat; background-size: contain; height:100%'></div>\
                           </div>") // put picture here
-      var $info_column = $('<div class="large-4 columns">\
-                              <ul>\
-                                <li>Fact 1</li>\
-                                <li>Fact 2</li>\
-                                <li>Fact 3</li>\
-                              </ul>\
+      var $info_column = $('<div class="large-4 columns" style=\'padding:45px\'>\
+                              <span style=\'font-family:"brandon-blk";font-size:24px;\'>'+item.vendor+'</span><br><span style=\'font-family:"brandon-reg";font-size:20px;\'>'+item.title+'</span>\
+                              <br>\
+                              <br>\
+                              <span style="font-family:\'brandon-reg\'">'+item.description+'</span>\
                               <i><u>Link to artisan profile</i></u>\
                             </div>'); // put info highlights here (maybe from product description?)**
-      var $action_column = $('<div class="large-4 columns" style="padding:10px">\
-                                <div style="background:gray;padding:5px;">\
-                                  <div style="background:white;padding:3px;">\
-                                    <div class="large-12 columns">$'+item.price/100+'</div>\
-                                    <div class="large-12 columns"><a href="#cart-anchor" class=\'action-popup-buy\' data-id=\''+item.variants[0].id+'\' onclick="alert(\'clicked\');$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">action to buy 1</a></div>\
-                                    <div class="large-12 columns">action to buy 5</div>\
-                                    <div class="large-12 columns">action to buy 10</div>\
+      var $action_column = $('<div class="large-4 columns" style="padding:45px;height:100%">\
+                                <div style="background:gray;padding:20px;height:100%">\
+                                  <div style="background:white;padding:15px;height:100%">\
+                                    <div class="large-12 columns" style="font-size:100px;font-family:\'brandon-blk\';text-align:center;height:160px;line-height:160px">$'+item.price/100+'</div>\
+                                    <div class="large-12 columns" style="font-family:\'brandon-reg\';text-align:center"><i>Free shipping over $50</i></div>\
+                                    <hr style="padding:0px;margin:5px;">\
+                                    <div class="row"><div class="large-6 columns" style="line-height:35px;text-align:right">Number of bars: </div><div class="large-6 columns"><input style="overflow:hidden;width:35px" type="text" name="fbars" id="num-bars" value="1"></div></div>\
+                                    <div class="large-12 columns"><a href="#cart-anchor" class=\'action-popup-buy large button expand\' style="font-family:\'brandon-blk\';"" data-id=\''+item.variants[0].id+'\' onclick="$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var q = document.createElement(\'input\'); q.setAttribute(\'type\', \'hidden\'); q.setAttribute(\'name\', \'quantity\'); q.setAttribute(\'value\', $(\'#num-bars\').val()); f.appendChild(q); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">ADD TO CART</a></div>\
                                   </div>\
                                 </div>\
                               </div>'); // put actions here
-      var $close_window = $('<span style="position:absolute;top:5px;right:5px;">X</span>'); // this is the big X at the top right of the pop-up
+      var $close_window = $('<span style="cursor:pointer;position:absolute;top:10px;right:10px;font-size:24px" onClick="$(\'#current-highlighted-product\').hide();$(\'#focus-dim\').hide();">X</span>'); // this is the big X at the top right of the pop-up
 
       $container.append($pic_column);
       $container.append($info_column);
@@ -451,9 +486,16 @@
       $('.wrapper').append($container);
       $('body').append($dim_outside)
 
-      $('#current-highlighted-product').css('top', $(document).scrollTop()+50)
+      var modal_height = $('#current-highlighted-product').height();
+
+      $('#current-highlighted-product').css('display', 'none');
+      $('#focus-dim').css('display','none');
+      $('#current-highlighted-product').css('top', ($(window).height()-modal_height)/2);
+      console.log($('#current-highlighted-product').css('top'));
       $('#focus-dim').css('height', $(document).height());
 
+      $('#current-highlighted-product').fadeIn();
+      $('#focus-dim').fadeIn();
 
     // panel should be populated with 1 row, 3 columns
     // absolute positioned x-out icon in top right
@@ -470,7 +512,7 @@
 
     //event for purchasing
     $('.action-popup-buy').click(function(){
-      alert('in here')
+      //alert('in here')
       var prod_id = $(this).attr('data-id'); // grab product id from div
       var quantity = 1;                      // buy one unit of product
       purchase_product(prod_id, quantity);   // purchase product method call
@@ -518,7 +560,7 @@
               //update total price
               var total_cart_price = response.total_price
               var total_cart_items = response.item_count;
-              $('.price').html('$ ' + total_cart_price/100)
+              $('.total-price').html('$ ' + total_cart_price/100)
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
               //need notification strip here ***** TODO!!
@@ -547,7 +589,7 @@
       var $info_row = $('<div class="row">')
         var $info_description = $('<div class="large-9 columns" style="padding:0">\
                                     <p>'+item_vendor.toUpperCase()+'</p>\
-                                    <p>'+item_title.toUpperCase()+'</p>\
+                                    <p id="product-cart-banner-title">'+item_title.toUpperCase()+'</p>\
                                   </div>\
                                   <div class="large-3 columns" id="left-cart-desc-side" style="padding:0">\
                                     <div class="row" style="margin-right:0">\
@@ -587,7 +629,7 @@
         data: post_data,
         dataType: 'json',
         success: function(){
-          alert('changed');
+          //alert('changed');
           var get_cart_data = $.ajax({
             type: 'GET',
             url: url_get, 

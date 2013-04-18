@@ -1895,6 +1895,10 @@ a.btn:hover{
 
 .theo-size {height: 468.35px; width: 197.2px;}
 
+.soma-size {height:394.4px;width:176.66px;}
+
+.dt-size {display:none;}
+
 /* Proportional pixels
 .dand-size {height:271.25px;width:125.42px;}
 
@@ -1931,22 +1935,24 @@ a.btn:hover{
 /*************
 * Nav
 **************/
-
 #nav-1 ul {
   padding: 0;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1150px;
   list-style: none;
   text-align: center;
   font-family: 'brandon-blk';
   font-size: 15px;
   letter-spacing:8px;
+  margin-top:50px;
+  z-index: 50;
 }
 
-#nav-1 ul a {color:rgb(118,118,118);}
+#nav-1 ul a {color:rgb(238,233,233);}
 #nav-1 ul a:hover {color:black;}
 
-#nav-1 ul li {display: inline; padding-right:50px;}
+#nav-1 ul li {display: inline; padding-right:80px; margin-top:6px;}
+#nav-1 ul li img {margin-top:-6px;}
 
 #nav-1 ul li.last {padding-right:0px !important;}
 
@@ -1957,6 +1963,8 @@ a.btn:hover{
 **************/
 
 .templateIndex .row {max-width: 200em;}
+.templateCollection .row {max-width: 200em;}
+
 
 .big-break {letter-spacing:8px;font-family:'brandon-blk';text-align:center;line-height:150px;height:150px;font-size:24px;}
 .minor-break {letter-spacing:8px;font-family:'brandon-blk';background-color:rgb(221,221,221);text-align:center;line-height:100px;height:100px;font-size:24px;}
@@ -2029,6 +2037,8 @@ a.btn:hover{
 .options-style #region-filters {}
 .option-value {display:block;}
 .inline-summary {display:inline !important;color:black;}
+#show-filter-choices {color:rgb(118,118,118);}
+#show-filter-choices a {color:black;}
 
 .helper{height:100%;}
 .bar-image {margin-left:10px;margin-right:10px;border:4px solid white;height:100%;}
@@ -2042,8 +2052,8 @@ a.btn:hover{
 /* on page viewport */
 #current-highlighted-product {
   z-index:40;
-  position:absolute; 
-  height:350px; 
+  position:fixed;
+  height:450px; 
   background:white; 
   width:100%;
   -moz-box-shadow: 0 2px 2px black;
@@ -2052,6 +2062,7 @@ a.btn:hover{
   max-width: 200em !important;}
 #focus-dim {z-index:30;width:100%;position:absolute;top:0;background:black; opacity:.4;}
 #added-to-cart {z-index:41; position:fixed; top:0; height:30px; width:100%; background-color:rgb(128,168,38); font-family: 'brandon-blk';font-size:18px;line-height: 30px;}
+.action-learn:hover {color:black;}
 
 /* seperate page viewport */
 
@@ -2072,8 +2083,10 @@ a.btn:hover{
 * Marketing banner
 **************/
 .header-row {margin:0 !important;}
+.top-banner {margin-top:0px;height:350px !important;}
+#menu-nav {width:100%;z-index:50;}
 
-.logo-title {letter-spacing:8px;position: absolute; height: 300px; width:100%; font-family:'brandon-blk';}
+.logo-title {letter-spacing:8px;position: absolute; height: 350px; width:100%; font-family:'brandon-blk'; top:0;}
 .market-square {background: url('http://www.hhhhold.com/800x300'); background-size: cover; display: table-cell; text-align: center; float: left; margin-right: 50px; width:300px !important; height:300px !important;}
 .last-col {margin-right:0px;}
 #market-square-list { width:100%; margin: 8px auto auto; display: inline-block; }
@@ -2084,6 +2097,7 @@ a.btn:hover{
 
 /* Cart in banner */
 .cart-panel {background:rgb(221,221,221);border: 1px solid black;font-family:'brandon-blk';z-index:20; padding: 5px; position:absolute;left:-541px;width:520px;display:none;}
+.cart-panel p {margin-bottom:0;}
 #product-rows-grid {background:white;padding-left:10px;padding-right:10px;}
 .product-preview {padding-bottom:5px; text-align: left};
 .product-preview p {line-height: 1.3; margin-bottom: 0};
@@ -2092,10 +2106,13 @@ a.btn:hover{
 #cart-img img {display:inline;}
 #cart-count {position:absolute; left:-20px; top:4px;}
 .bar-image {font-size:50px;color:greenyellow;text-align:center;line-height:150px}
+#total-cart-count {font-family:'brandon-reg';}
+.total-price {font-family:'brandon-reg';}
+#product-cart-banner-title {font-family: 'brandon-reg'}
 
 /* Index */
 #market-index { position: relative; width: 100%; height: 300px; background: url('{{ "banner_filler.png" | asset_url }}') 50% 78%;  background-size: cover;}
-.index-title {padding-top:8%; color:white;}
+.index-title {padding-top:10%; color:white;}
 .index-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 .gifts-link { background: url('{{ "gift_shot.png" | asset_url }}') !important;  background-size: cover; }
 .bars-link {}
@@ -2105,7 +2122,7 @@ a.btn:hover{
 /* Collection */
   /* find collection ID and fill in content */
 #market-collection { position: relative; width: 100%; height: 300px; background: url('{{ "collection_header.png" | asset_url }}') 50% 52%;  background-size: cover;}
-.collection-title {padding-top:6%; color:white;}
+.collection-title {padding-top:10%; color:white;}
 .collection-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 
 
