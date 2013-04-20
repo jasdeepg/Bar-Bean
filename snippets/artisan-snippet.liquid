@@ -1,0 +1,35 @@
+		<div class='row artisan-profile'>
+			<div id='hide-link-{{product_vendor | handleize}}' style='display:none'>{{product_vendor | link_to_vendor}}</div>
+
+			<span style='font-family:"brandon-blk";font-size:23px;'>{{ product_vendor | upcase }}</span>
+			<br>
+			<br>
+			<span id='show-link-{{product_vendor | handleize}}' style='font-family:"brandon-reg";font-size:23px'><a href=''>View products</a></span>
+		</div>
+
+		<script type="text/javascript">
+			console.log($('#hide-link-{{product_vendor | handleize}} a').attr('href'));
+			var link = $('#hide-link-{{product_vendor | handleize}} a').attr('href')
+			$('#show-link-{{product_vendor | handleize}} a').attr('href', link)
+		</script>
+	    <!--<div class='row'>
+			<div class='large-6 columns' style='padding-right:90px !important'>
+				<div class='featured-info'>
+					<div id='emphasis'>
+						{{ product_vendor | link_to_vendor }}
+						{{ product_vendor.title}}
+					</div>
+					<<div id='description'>
+						Each step is as influential to the taste as the last. Every hunger pang an opportunity to taste something sweeter.  Every morsel of information: origin, process, batch. These aren’t empty claims. They’re taste. And they matter differently to each of us.  And those differences should be celebrated. 
+						<br>
+						<br>
+						It’s with this philospohy that we built this site. 
+					</div>
+					<div id='more-link'>
+						Share
+					</div>
+				</div>
+			</div>
+			<div class='large-6 columns' style='background:url("")'>
+			</div>
+		</div>-->

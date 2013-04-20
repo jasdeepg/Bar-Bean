@@ -1,11 +1,10 @@
 
 
 <div class='row options-style'>
-  <ul class='large-block-grid-4'>
-    <li><a href="#" data-dropdown='brand'>BRAND</a></li>
-    <li><a href="#" data-dropdown='bean'>BEAN CHARACTERISTICS</a></li>
+  <ul class='large-block-grid-3'>
+    <li><a href="#" data-dropdown='brand-filters'>BRAND</a></li>
+    <li><a href="#" data-dropdown='bean-filters'>BEAN CHARACTERISTICS</a></li>
     <li><a href="#" data-dropdown='flavor-filters'>FLAVOR PROFILE</a></li>
-    <li><a href="#" data-dropdown='sort-filters'>SORT BY</a></li>
   </ul>
 </div>
 
@@ -18,6 +17,17 @@
       <li><a href='#options' class='option-value' data-option-value='.artisan'></a> Small-batch</li>
       <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
     </ul>-->
+    <ul class='f-dropdown options' id='brand-filters' data-dropdown-content>
+      <li><div class='option-value'><a href='/collections/all'>All</a></div></li>
+      {% for product_vendor in shop.vendors %}
+        <li><div class='option-value'>{{product_vendor | link_to_vendor }}</div></li>
+      {% endfor %}
+    </ul>
+    <ul class='f-dropdown options' id='bean-filters' data-dropdown-content data-option-key='filter'>
+      <li><a href='#options' class='option-value' data-option-value='.single-origin'></a> Single Origin</li>
+      <li><a href='#options' class='option-value' data-option-value='.fair-trade'></a> Fair Trade</li>
+      <li><a href='#options' class='option-value' data-option-value='.organic'></a> Organic</li>
+    </ul>
     <ul class='f-dropdown options' id='region-filters' data-dropdown-content data-option-key='filter'>
       <li><a href='#options' class='option-value' data-option-value='.NE'></a> Northeast</li>
       <li><a href='#options' class='option-value' data-option-value='.SE'></a> Southeast</li>
@@ -74,7 +84,7 @@
       {% if collection.products.size > 0 %}
         <div class="product-grid-grid clearfix">
           {% for product in collection.products %}
-            <div class='{% for tag in product.tags %} {{tag}} {% endfor %}'>
+            <div class='grid-item {% for tag in product.tags %} {{tag}} {% endfor %}' style='display:none;height:450px'>
               {% include 'product-grid-item-OLD' %}
             </div>
           {% endfor %}
@@ -86,12 +96,19 @@
         <strong>No products found in this collection.</strong>
       {% endif %}
     {% endpaginate %}
-  </div>
-  </section>
-  
+  </div>  
+
 </div> <!-- /#col-main -->
 
 <script type="text/javascript">
+ // add to masonry
+  $('.product-grid').masonry({
+    itemSelector :'.item',
+    columnWidth: 1,
+    percent : function ( $elem ) {
+        return $elem.child().attr('data-percent');
+      }
+  });
 
   // scratch JS
   $('.dt-size').parent().remove();
@@ -123,51 +140,34 @@
 
     console.log('in mult pages ')
     var getItems = function(){
-      collection = $('.product-grid');
+      $collection = $('.product-grid');
       console.log('getting')
       for (i = 2; i <= pages_count;i++ ){     // loop through each paginated page
         $.get(base_url + i, function(data){   // get all the html
+          //console.log(data);
           var items = $(data).find('.item');  // find just the products
           console.log(items);
-          //collection.append(items);  // append them to the page
-          //set_prod_hover_event();
+          $collection.append(items);  // append them to the page
+          $collection.masonry('reload');
+          set_prod_hover_event();
         });
       }
     }
-
     getItems();
   }
 
   // end of scratch JS
 
-  // add to masonry
-  $(function(){
-    $('.product-grid').isotope({
-      itemSelector :'.item',
-      layoutMode: 'masonry',
-      masonry: {
-        columnWidth: 1
-      },
-      getSortData : {
-        percent : function ( $elem ) {
-          return $elem.attr('data-percent');
-        }
-      }
-    });
-  });
-
   $('.bars').click(function(){
-    if ($('#grid-view').is(':visible')){
-      $('#grid-view').hide();
-    }
+    $('#grid-view').hide();
     $('#bars-view').show();
+    $('.grid-item').hide();
     $('.product-grid').isotope('reLayout');
   })
   $('.grid-select').click(function(){
-    if ($('#bars-view').is(':visible')){
-      $('#bars-view').hide();
-    }
+    $('#bars-view').hide();
     $('#grid-view').show();
+    $('.grid-item').show();
   })
 
   // if a filter is clicked

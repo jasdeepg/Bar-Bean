@@ -1,0 +1,27 @@
+<div id="col-main">
+	<!--Filters
+
+	<div class='row options-style'>
+	  <ul class='large-block-grid-4'>
+	    <li><a href="#" data-dropdown='brand'>BRAND</a></li>
+	    <li><a href="#" data-dropdown='bean'>BEAN CHARACTERISTICS</a></li>
+	    <li><a href="#" data-dropdown='flavor-filters'>FLAVOR PROFILE</a></li>
+	    <li><a href="#" data-dropdown='sort-filters'>SORT BY</a></li>
+	  </ul>
+	</div>
+
+	-->
+
+	<div class='row minor-break'>
+		BRANDS WE CARRY
+	</div>
+
+	<section id='artisan-snippet-section'>
+
+		{% for product_vendor in shop.vendors %}
+			{% include 'artisan-snippet' %}
+		{% endfor %}
+
+	</section>
+
+</div>

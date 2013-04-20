@@ -430,8 +430,8 @@ body{ border-top: solid 4px {{settings.cart_bg_colour}}; }
   font-weight: bold;
   position: absolute;
   z-index:12;
-  top: 20px;
-  right: 25px;
+  top: 17px;
+  right: 80px;
   -webkit-border-radius: 0 0 6px 6px;
   -moz-border-radius: 0 0 6px 6px;
   border-radius: 0 0 6px 6px;
@@ -454,10 +454,10 @@ body{ border-top: solid 4px {{settings.cart_bg_colour}}; }
   margin: 0;
   }
 #umbrella a{
-  color: black;
+  color: white;
   text-decoration: none;
   }
-#umbrella a:hover{ color: {{ settings.cart_link_hover_colour }}; }
+#umbrella a:hover{ color: black; }
 
 #umbrella .num-items-in-cart .icon{
   display: block;
@@ -1948,10 +1948,31 @@ a.btn:hover{
   z-index: 50;
 }
 
+#nav-list{
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  text-align: center;
+  font-family: 'brandon-blk';
+  font-size: 15px;
+  letter-spacing:8px;
+  margin-top:13px;
+  z-index: 50;
+  float:left;
+  margin-left:250px;
+}
+
+#nav-list li {
+  display:inline;
+}
+
+#nav-list li a {color:white;}
+#nav-list li a:hover {color:black;}
+
 #nav-1 ul a {color:rgb(238,233,233);}
 #nav-1 ul a:hover {color:black;}
 
-#nav-1 ul li {display: inline; padding-right:80px; margin-top:6px;}
+#nav-1 ul li {display: inline; padding-right:64px; margin-top:6px;}
 #nav-1 ul li img {margin-top:-6px;}
 
 #nav-1 ul li.last {padding-right:0px !important;}
@@ -1964,6 +1985,8 @@ a.btn:hover{
 
 .templateIndex .row {max-width: 200em;}
 .templateCollection .row {max-width: 200em;}
+.templatePage .row {max-width: 200em}
+.templateCart .row {max-width: 200em;}
 
 
 .big-break {letter-spacing:8px;font-family:'brandon-blk';text-align:center;line-height:150px;height:150px;font-size:24px;}
@@ -1974,7 +1997,9 @@ a.btn:hover{
 .featured-info {margin-left:72px;}
 .featured-info > #emphasis {letter-spacing:8px;font-family:'brandon-blk';font-size:24px;margin-bottom:37px;margin-top:76px;}
 .featured-info > #description {font-family:'brandon-reg';font-size:24px;margin-bottom:37px;line-height:30px;}
+.featured-info > #show-link {font-family:'brandon-reg';font-size:24px;font-style:italic;text-decoration: underline;margin-bottom:54px;}
 .featured-info > #more-link {font-family:'brandon-reg';font-size:24px;font-style:italic;text-decoration: underline;margin-bottom:54px;}
+
 
 .featured .ver-big {height:630px;}
 .featured .hor-big {height:325px;margin-right:0px !important;}
@@ -2063,6 +2088,34 @@ a.btn:hover{
 #focus-dim {z-index:30;width:100%;position:absolute;top:0;background:black; opacity:.4;}
 #added-to-cart {z-index:41; position:fixed; top:0; height:30px; width:100%; background-color:rgb(128,168,38); font-family: 'brandon-blk';font-size:18px;line-height: 30px;}
 .action-learn:hover {color:black;}
+.prod-sub-heading {font-size:13px;font-family:'brandon-reg';}
+
+
+.product-popup-desc {margin-left:-24px !important;}
+
+.flav #tags {}
+.flav #description {display:none;}
+.flav #dimensions {display:none;}
+.flav ul {line-height: 15px; list-style-type: none;}
+
+.main-desc #flavors {display:none;}
+.main-desc #dimensions {display:none;}
+.main-desc ul {list-style-type: none;}
+
+.dim #description {display:none;}
+.dim #flavors {display:none;}
+.dim ul {line-height: 15px; list-style-type: none;}
+
+.dim-sub-head {text-transform: uppercase; font-weight: bold};
+
+/* grid */
+.row.current-highlighted-product-grid-view {
+  height:450px !important; 
+  background:white; 
+  width:100%;
+}
+
+.pagination {display:none !important;}
 
 /* seperate page viewport */
 
@@ -2078,6 +2131,14 @@ a.btn:hover{
   #checkout-panel .row {height:100%;}
 
 .product-bar-image {padding:5px;height:100%;}
+
+/*************
+* Artisan page
+**************/
+.artisan-profile{
+  height:100px;
+  text-align: center;
+}
 
 /*************
 * Marketing banner

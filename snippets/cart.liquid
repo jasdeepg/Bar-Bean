@@ -7,7 +7,7 @@
       <hr style='margin-top:10px;margin-bottom:10px;'>
       SHOPPING CART
       <hr style='margin-top:10px;margin-bottom:10px;'>
-      <div id='product-rows-grid'>
+      <div id='product-rows-grid' style='overflow:auto;height:400px'>
       {% for item in cart.items %}
         <div class='product-preview row' id='product-cart-{{ item.id }}' style='position:relative'>
           <div class='clear-item' style='z-index:50;position:absolute;top:3px;right:3px;' data-id='{{ item.variant.id }}'>X</div>      

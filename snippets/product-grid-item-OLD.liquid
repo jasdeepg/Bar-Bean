@@ -1,47 +1,29 @@
-
-    
-    <div class='row product-grid-type-item' style='margin:0;max-width:none;height:200px'>
-      <a href="{{product.url}}">
-      <div class='large-3 columns bar-image' style='background: url("{{ product.featured_image | product_img_url: "medium" }}") center center no-repeat'>
-      </div></a>
-      <div class='large-7 columns'>
-        <div class='row' style='font-family:"brandon-blk"'>
-          {{ product.vendor }}
-          <br>
-          {{ product.title }}
-          <br>
-          {{ product.price | money_with_currency }}
-        </div>
-        <br>
-        <div class='row' style='font-family:"brandon-reg"'>
-          Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. 
-        </div>
+    <div class="row current-highlighted-product-grid-view" style='height:450px'>
+      <div class='large-3 columns' style='padding:20px;height:100%'>
+        <div style='background: url("{{ product.featured_image | product_img_url: "large" }}") center no-repeat; background-size: contain; height:100%'></div>
       </div>
-      <div class='large-2 columns'>
-        <button>Add to cart</button>
+      <div class='large-9 columns' style='padding:45px' data-id='{{product.variants.first.id}}'>
+        <div class='row product-popup-desc'>
+          <span style='font-family:"brandon-blk";font-size:24px;'>{{ product.vendor | upcase }}</span><br><span style='font-family:"brandon-reg";font-size:21px;'>{{ product.title }}</span>
+          <br>
+          <br>
+          <span class='main-desc' style="font-family:'brandon-reg';font-size:19px;">{{ product.description }}</span>
+        </div>
+        <div class='row' style='margin-left:-34px'>
+          <div class='large-4 columns flav'>
+            <label class='prod-sub-heading'>FLAVORS</label>
+            {{ product.description }}
+          </div>
+          <div class='large-4 columns dim'>
+            <label class='prod-sub-heading'>DIMENSIONS</label>
+            {{ product.description }}
+          </div>
+          <div class='large-4 columns'>
+          </div>
+        </div>
+        <div class='row' style='margin-left:-36px'>
+            <div class="large-6 columns" style="line-height:35px;margin-top:20px"><label class='prod-sub-heading' style='display:block;float:left;width:50%;font-size:13px;'>NUMBER OF BARS:</label> <input style="overflow:hidden;width:40px;margin-left:200px; border: 5px solid black" type="text" name="fbars" id="num-bars-{{product.variants.first.id}}" value="1"></div>
+              <div class="large-6 columns"><a href="#cart-anchor" class='action-buy large button expand' style="color:black;font-family:'brandon-reg';font-size:21px;background:rgb(239,239,239)" data-id='{{product.variants.first.id }}' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-{{ product.variants.first.id }}'); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', '{{product.variants.first.id }}'); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', $('#num-bars-{{product.variants.first.id}}').val()); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">ADD TO CART</a></div></div>
       </div>
     </div>
     <hr>
-
-    {% comment %}
-    <span class="product-price{% if product.compare_at_price > product.price %} sale{% endif %}">
-      {% if product.available %}
-      {% if product.price_varies %} 
-      <small>from</small> {{ product.price_min | money }}
-      {% else %}
-      {{ product.price_min | money }}
-      {% endif %}
-      {% if product.compare_at_price > product.price %}
-      <small>was {{ product.compare_at_price | money }}</small>
-      {% endif %}
-      {% else %}
-      Sold Out
-      {% endif %}
-    </span>
-    <img src="{{ product.featured_image | product_img_url: 'medium' }}" class="product-photo" alt="{{ product.featured_image.alt | escape }}" /> 
-
-  
-  <div class="product-information">
-    <a href="{{ product.url | within: collection }}">{{ product.title }}</a>                    
-  </div> 
-  {% endcomment %}
