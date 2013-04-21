@@ -322,6 +322,26 @@
             });
       })
 
+      $('.action-bar-learn').click(function(){
+        // need to get product data/img from JSON request
+        // what do i need to send to the URL to get my product info?**
+        var $product_div = $(this);
+        var prod_handle = $product_div.attr('data-product');
+        var prod_id = $product_div.attr('data-id');
+
+        var get_product_url = '/products/'+prod_handle+'.js';
+        $.ajax({
+              type: 'GET',
+              url: get_product_url, 
+              dataType: 'json',
+              success: function(response){
+                // this is where the product stuff comes up
+                console.log(response.variants[0].id);
+                pop_up(response, prod_id);
+              }
+            });
+      })
+
     // if buy is clicked
     $('.action-buy').click(function(){
       $('.cart-panel').hide()

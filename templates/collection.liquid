@@ -1,9 +1,8 @@
 
 
 <div class='row options-style'>
-  <ul class='large-block-grid-3'>
+  <ul class='large-block-grid-2'>
     <li><a href="#" data-dropdown='brand-filters'>BRAND</a></li>
-    <li><a href="#" data-dropdown='bean-filters'>BEAN CHARACTERISTICS</a></li>
     <li><a href="#" data-dropdown='flavor-filters'>FLAVOR PROFILE</a></li>
   </ul>
 </div>
@@ -50,6 +49,7 @@
 {% assign gridFlag = false %}
 
 <div class='row' id='filter-breadcrumbs'>
+  <span style="float:left;padding-right:5px">FILTERS </span>
   <div id='show-filter-choices'></div>
   <div id='nav-select'>
     <button class='grid-select'>Grid</button>
@@ -102,12 +102,16 @@
 
 <script type="text/javascript">
  // add to masonry
-  $('.product-grid').masonry({
+  $('.product-grid').isotope({
     itemSelector :'.item',
+    masonry : {
     columnWidth: 1,
+    },
+    getSortData: {
     percent : function ( $elem ) {
-        return $elem.child().attr('data-percent');
+        return $elem.attr('data-percent');
       }
+    }
   });
 
   // scratch JS
@@ -148,7 +152,7 @@
           var items = $(data).find('.item');  // find just the products
           console.log(items);
           $collection.append(items);  // append them to the page
-          $collection.masonry('reload');
+          $collection.isotope('reloadItems');
           set_prod_hover_event();
         });
       }
@@ -256,8 +260,12 @@
         //console.log('key ' + keys[i] + ' value ' + v)
         var options = {};
         options[keys[i]] = v;
-        $('.product-grid').isotope(options)
+        //$('.product-grid').isotope(options)
     });
+
+      var selector = filters.join('');
+
+      $('.product-grid').isotope({ filter:selector })
   }
 
   function remove_filter(){
@@ -301,7 +309,7 @@
       options[keys[i]] = v;
       $('.product-grid').isotope(options)
     });
-
+    
     $option_key.remove();
   }
 
