@@ -45,11 +45,6 @@
           {% include 'product-grid-item' %}
         </div>
     {% endfor %}
-    {% for product in collections.mast-brothers.products %}
-        <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
-          {% include 'product-grid-item' %}
-        </div>
-    {% endfor %}
   </div>
   <div id='hide-link' style='display:none'>{{ 'Mast Brothers' | link_to_vendor}}</div>
   <div class='row view-more' id='show-link'>

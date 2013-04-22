@@ -1,9 +1,10 @@
 
 
 <div class='row options-style'>
-  <ul class='large-block-grid-2'>
-    <li><a href="#" data-dropdown='brand-filters'>BRAND</a></li>
-    <li><a href="#" data-dropdown='flavor-filters'>FLAVOR PROFILE</a></li>
+  <ul class='large-block-grid-3' style='width:100%'>
+    <li ><a href="#" data-dropdown='brand-filters'>SHOP BY BRAND</a></li>
+    <li style='font-size:30px;color:black;background:white'>-FILTERS-</li>
+    <li><a href="#" data-dropdown='flavor-filters'>SHOP BY FLAVOR PROFILE</a></li>
   </ul>
 </div>
 
@@ -17,7 +18,7 @@
       <li><a href='#options' class='option-value' data-option-value='*'></a> Large-batch</li>
     </ul>-->
     <ul class='f-dropdown options' id='brand-filters' data-dropdown-content>
-      <li><div class='option-value'><a href='/collections/all'>All</a></div></li>
+      <li><div class='option-value'><a href='/collections/all'>All brands</a></div></li>
       {% for product_vendor in shop.vendors %}
         <li><div class='option-value'>{{product_vendor | link_to_vendor }}</div></li>
       {% endfor %}
@@ -48,8 +49,8 @@
 <div id="col-main" class="{{ collection.handle }}">
 {% assign gridFlag = false %}
 
-<div class='row' id='filter-breadcrumbs'>
-  <span style="float:left;padding-right:5px">FILTERS </span>
+<div class='row' id='filter-breadcrumbs' style='display:none'>
+  <span style="float:left;padding-right:5px">SELECTED FILTERS: </span>
   <div id='show-filter-choices'></div>
   <div id='nav-select'>
     <button class='grid-select'>Grid</button>
@@ -58,12 +59,12 @@
 </div>
 
 
-  <div id='bars-view'>
+  <!--<div id='bars-view'>
     {% paginate collection.products by 50 %}
       {% if collection.products.size > 0 %}
         <div class="product-grid clearfix isotope">
           {% for product in collection.products %}
-            <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}'>
+            <div class='item {% for tag in product.tags %} {{tag}} {% endfor %}' style='display:none;'>
               {% include 'product-grid-item' %}
             </div>
           {% endfor %}
@@ -76,17 +77,21 @@
       {% endif %}
     {% endpaginate %}
 
-  </div>
+  </div>-->
 
-  <div id='grid-view' style='display:none'>
+
+  <div id='grid-view' class='row'>
     <br>
     {% paginate collection.products by 10 %}
       {% if collection.products.size > 0 %}
-        <div class="product-grid-grid clearfix">
+        <div class="product-gridView clearfix">
           {% for product in collection.products %}
-            <div class='grid-item {% for tag in product.tags %} {{tag}} {% endfor %}' style='display:none;height:450px'>
-              {% include 'product-grid-item-OLD' %}
-            </div>
+            <!--{% cycle 'group1': '<div class="row" style="padding-bottom:10px;margin-bottom:10px;border-bottom: 1px solid grey">', '', '', '' %}-->
+              <div class='large-3 columns gridItem {% for tag in product.tags %} {{tag}} {% endfor %}' style="float:left" data-product='{{product.handle}}' data-id='{{product.variants.first.id }}' >
+                {% include 'product-grid-item-OLD' %}
+              </div>
+            <!--{% cycle 'group2': '', '', '', '</div>' %}
+            {% cycle 'group3': '', '', '', '<hr>' %}-->
           {% endfor %}
         </div>
 
@@ -101,7 +106,7 @@
 </div> <!-- /#col-main -->
 
 <script type="text/javascript">
- // add to masonry
+  // add to masonry
   $('.product-grid').isotope({
     itemSelector :'.item',
     masonry : {
@@ -111,6 +116,14 @@
     percent : function ( $elem ) {
         return $elem.attr('data-percent');
       }
+    }
+  });
+
+  $('.product-gridView').isotope({
+    layoutMode: 'fitRows',
+    fitRows: {
+      columnWidth: 220,
+      rowHeight:360
     }
   });
 
@@ -140,19 +153,26 @@
   console.log('base_url ' + base_url);
 
   if (pages_count > 1){
-    $('#pagination').hide(); // hide pagination links, originally left in to keep it unobtrusive
+    $('#pagination').show(); // hide pagination links, originally left in to keep it unobtrusive
 
     console.log('in mult pages ')
     var getItems = function(){
-      $collection = $('.product-grid');
+      $collection = $('.product-gridView');
       console.log('getting')
       for (i = 2; i <= pages_count;i++ ){     // loop through each paginated page
         $.get(base_url + i, function(data){   // get all the html
           //console.log(data);
-          var items = $(data).find('.item');  // find just the products
+          var items = $(data).find('.gridItem');  // find just the products
+          console.log('items')
           console.log(items);
-          $collection.append(items);  // append them to the page
-          $collection.isotope('reloadItems');
+          //$collection.append(items);  // append them to the page
+          $.each(items, function(i,item){
+            console.log(item)
+            $( item ).find('.row').css('width','100%');
+            $collection.append( $( item ) ).isotope('appended', $ ( item ));
+            //$collection.isotope('appended', $( item )) 
+          })
+          $collection.isotope('reLayout');
           set_prod_hover_event();
         });
       }
@@ -248,6 +268,12 @@
 
       var filter_list_item;
       $('#show-filter-choices').html('');
+      if (filters.length > 0){
+        $('#filter-breadcrumbs').show();
+      }
+      else {
+        $('#filter-breadcrumbs').hide();
+      }
 
       $.each(filters, function(i,item){
         filter_list_item = item.split('.')[1];
@@ -265,6 +291,7 @@
 
       var selector = filters.join('');
 
+      $('.product-gridView').isotope({ filter:selector })
       $('.product-grid').isotope({ filter:selector })
   }
 
@@ -303,11 +330,19 @@
     var keys = options_hash.keys();
     //console.log(keys)
 
+    if (filters.length > 0){
+      $('#filter-breadcrumbs').show();
+    }
+    else {
+      $('#filter-breadcrumbs').hide();
+    }
+
     $.each(values, function(i,v){
       //console.log('key ' + keys[i] + ' value ' + v)
       var options = {};
       options[keys[i]] = v;
       $('.product-grid').isotope(options)
+      $('.product-gridView').isotope(options)
     });
     
     $option_key.remove();

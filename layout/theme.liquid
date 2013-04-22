@@ -155,7 +155,7 @@
         <div class='index-title'>
           <div class='row'>
             <div class='large-5 large-centered columns'>
-              CHOCOLATE IS WORTH SAVORING
+              WELCOME TO THE CHOCOLATE PARTY
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@
         <div class='collection-title'>
           <div class='row'>
             <div class='large-6 large-centered columns'>
-              DEFINE YOUR TASTE
+              FIND YOUR BARS
             </div>
           </div>
         </div>
@@ -181,7 +181,6 @@
 
       if (!docked && $(document).scrollTop() > 0){
         docked = true;
-        $('#menu-nav').css('background','rgba(60,60,60,0.9)');
         $('#menu-nav').css('position', 'fixed');
         $('#menu-nav').css('top',0)
         $('#menu-nav').css('height',49+'px')
@@ -287,6 +286,16 @@
   <!-- script to add cart directly from any page -->
   <script type="text/javascript">
 
+    $('.cart-panel').click(function(e) {
+      e.stopPropagation();
+    })
+    $('.cart-link').click(function(e) {
+      e.stopPropagation();
+    })
+    $(document).click(function(e){
+      $('.cart-panel').hide();
+    })
+
     function set_prod_hover_event(){
 
       $('.product-grid-item').hover(function(){
@@ -323,6 +332,8 @@
       })
 
       $('.action-bar-learn').click(function(){
+        var prod_isBar = $(this).attr('data-isBar');
+
         // need to get product data/img from JSON request
         // what do i need to send to the URL to get my product info?**
         var $product_div = $(this);
@@ -355,6 +366,7 @@
 
       var prod_id = $product_div.attr('data-id');
       var prod_handle = $product_div.attr('data-product');
+      var prod_isBar = $(this).attr('data-isBar')
 
       // console.log($('#form-'+prod_id).serialize())
       // console.log($product_div);
@@ -387,20 +399,21 @@
               });
 
               //update total price
-              var total_cart_price = response.total_price
+              var total_cart_price = response.total_price;
               var total_cart_items = response.item_count;
               $('.price').html('$ ' + total_cart_price/100)
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
-              //make cart panel appear for 3 seconds
-              $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
-              $('.cart-panel').show();
-              $('.cart-panel').animate({
-                top:''
-              },1500, function(){
-                $('.cart-panel').delay(3000).fadeOut('slow')
-              })
-
+              if (!prod_isBar){
+                //make cart panel appear for 3 seconds
+                $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
+                $('.cart-panel').show();
+                $('.cart-panel').animate({
+                  top:''
+                },1500, function(){
+                  $('.cart-panel').delay(3000).fadeOut('slow')
+                })
+              }
               //notify
               notify_about_purchase();
 
@@ -420,7 +433,7 @@
     var url_get = '/cart';
     var post_data = 'quantity=0&id='+prod_id;
 
-    console.log(post_data)
+    //console.log(post_data)
 
     var change = $.ajax({
         type: 'POST',
@@ -428,7 +441,7 @@
         data: post_data,
         dataType: 'json',
         success: function(){
-          alert('changed');
+          //alert('changed');
           var get_cart_data = $.ajax({
             type: 'GET',
             url: url_get, 
@@ -471,7 +484,7 @@
                           </div>") // put picture here
       var $info_column = $('<div class=\'large-6 columns\' style=\'padding:45px\'>\
                               <div class=\'row product-popup-desc\'>\
-                                <span style=\'font-family:"brandon-blk";font-size:24px;\'>'+item.vendor.toUpperCase()+'</span><br><span style=\'font-family:"brandon-reg";font-size:21px;\'>'+item.title+'</span>\
+                                <span style=\'font-family:"brandon-blk";font-size:24px;\'>'+item.vendor.toUpperCase()+'</span><br><span style=\'font-family:"brandon-reg";font-size:21px;\'>'+item.title+'</span><br><span style=\'font-family:"brandon-reg";font-size:19px;color:red\'>Price: $'+(item.price/100).toFixed(2)+'</span>\
                                 <br>\
                                 <br>\
                                 <span class=\'main-desc\' style="font-family:\'brandon-reg\';font-size:19px;">'+item.description+'</span>\
@@ -559,7 +572,7 @@
   function notify_about_purchase(){
     $('#added-to-cart').remove();
 
-    var $top_strip = $('<div id=\'added-to-cart\'>ADDED TO YOUR BAG</div>');
+    var $top_strip = $('<div id=\'added-to-cart\'>ADDED TO CART</div>');
     $('body').append($top_strip);
 
     //$('#added-to-cart').css('top', $(document).scrollTop())
@@ -679,7 +692,8 @@
               $.each(response.items, function(i,item){
                 console.log(item);
                 addCartUX(item);
-              });
+
+                });
             },
             error: function(){alert('failed caro') }
           })
