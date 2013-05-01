@@ -1956,18 +1956,27 @@ a.btn:hover{
   font-family: 'brandon-blk';
   font-size: 15px;
   letter-spacing:8px;
-  margin-top:13px;
+  margin-top:13px !important;
   z-index: 50;
-  float:left;
-  margin-left:250px;
+  /*float:left;
+  margin-left:250px;*/
+  width:623px;
+  margin: 0 auto;
 }
 
 #nav-list li {
-  display:inline;
+  /*display:inline;*/
+  float:left;
+  padding-right:20px;
 }
+
+#nav-list li.last {padding-right:0px;}
 
 #nav-list li a {color:white;}
 #nav-list li a:hover {color:black;}
+
+#nav-list #list-img {}
+#nav-list #list-img img {width: 233px;}
 
 #nav-1 ul a {color:rgb(238,233,233);}
 #nav-1 ul a:hover {color:black;}
@@ -1987,6 +1996,8 @@ a.btn:hover{
 .templateCollection .row {max-width: 200em;}
 .templatePage .row {max-width: 200em}
 .templateCart .row {max-width: 200em;}
+.templateCustomersAccount .row,
+  .templateCustomersLogin .row {max-width: 200em}
 
 
 .big-break {letter-spacing:8px;font-family:'brandon-blk';text-align:center;line-height:150px;height:150px;font-size:24px;}
@@ -2051,15 +2062,15 @@ a.btn:hover{
   margin-left:0px !important;
   margin-right:0px !important;
   max-width:200em !important;
-  height:80px;
+  height:100px;
   text-align:center;
-  background:rgb(51,51,51);
 }
 
-.options-style ul {color:white;font-family:'brandon-blk';font-size:16px;line-height: 80px;}
+.options-style ul {color:white;font-family:'brandon-blk';font-size:24px;line-height: 100px;}
 .options-style ul a {color:white;}
 .options-style ul a:hover {color:gray;}
 .options-style #region-filters {}
+.options-style li {background: rgb(51,51,51);}
 .option-value {display:block;}
 .inline-summary {display:inline !important;color:black;}
 #show-filter-choices {color:rgb(118,118,118);}
@@ -2068,15 +2079,14 @@ a.btn:hover{
 .helper{height:100%;}
 .bar-image {margin-left:10px;margin-right:10px;border:4px solid white;height:100%;}
 
-#filter-breadcrumbs {font-family:'brandon-blk';font-size:13px;height:100px;margin:0;line-height:100px;}
+#filter-breadcrumbs {font-family:'brandon-blk';font-size:13px;height:30px;margin:0;line-height:30px;padding-top:15px;}
 
 #bars-view {display:none;}
 #grid-view {display:block;}
-  #grid-view hr {margin-top:10px;margin-bottom:10px;}
-.gridItem {width:330px;height:360px;margin-bottom:15px;border-bottom:1px solid rgba(60,60,60,.4);}
+.gridItem {width:330px;height:450px;margin-bottom:35px;border-bottom:1px solid rgba(60,60,60,.4);}
   .gridViewImageContainer { 
     background-size: contain;
-    height:146px;}
+    height:260px;}
   .gridViewProductTitle {font-family:'brandon-blk';font-size:1.5em;}
   .gridViewVendorTitle {font-family:'brandon-blk';font-size:1.05em;}
   .gridViewSubTitle {font-family:'brandon-reg';font-size:1.05em;color:red;}
@@ -2096,7 +2106,7 @@ a.btn:hover{
 /* on page viewport */
 #current-highlighted-product {
   z-index:40;
-  position:fixed;
+position:fixed;
   height:500px; 
   background:white; 
   width:100%;
@@ -2163,8 +2173,8 @@ a.btn:hover{
 * Marketing banner
 **************/
 .header-row {margin:0 !important;}
-.top-banner {margin-top:0px;height:350px !important;}
-#menu-nav {width:100%;z-index:50;background: rgba(60,60,60,0.9);height:49px;}
+.top-banner {margin-top:0px;height:500px !important;}
+#menu-nav {min-width:1050px; width:100%;z-index:50;background: rgba(60,60,60,0.9);height:49px;}
 
 .logo-title {letter-spacing:8px;position: absolute; height: 350px; width:100%; font-family:'brandon-blk'; top:0;}
 .market-square {background: url('http://www.hhhhold.com/800x300'); background-size: cover; display: table-cell; text-align: center; float: left; margin-right: 50px; width:300px !important; height:300px !important;}
@@ -2191,9 +2201,11 @@ a.btn:hover{
 #product-cart-banner-title {font-family: 'brandon-reg'}
 .clear-item {cursor:pointer;}
 
+.market-title-customers/account {display:none;}
+
 /* Index */
-#market-index { position: relative; width: 100%; height: 300px; background: url('{{ "banner_filler.png" | asset_url }}') 50% 78%;  background-size: cover;}
-.index-title {padding-top:10%; color:white;}
+#market-index { position: relative; width: 100%; height: 350px; background: url('{{ "index_banner_1.jpg" | asset_url }}') 50% 78%;  background-size: cover;}
+.index-title {padding-top:13%; color:white;}
 .index-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 .gifts-link { background: url('{{ "gift_shot.png" | asset_url }}') !important;  background-size: cover; }
 .bars-link {}
@@ -2202,10 +2214,18 @@ a.btn:hover{
 
 /* Collection */
   /* find collection ID and fill in content */
-#market-collection { position: relative; width: 100%; height: 300px; background: url('{{ "collection_header.png" | asset_url }}') 50% 52%;  background-size: cover;}
-.collection-title {padding-top:10%; color:white;}
+#market-collection { position: relative; width: 100%; height: 350px; background: url('{{ "banner_2.jpg" | asset_url }}') 50% 52%;  background-size: cover;}
+.collection-title {padding-top:17%; color:white;}
 .collection-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
 
+/* Pages */
+.pageabout-title {padding-top:16%; color:white;}
+.pageabout-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
+.pagehelp-title {padding-top:10%; color:white;}
+.pagehelp-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
+#market-pageabout {position: relative; width: 100%; height: 350px; background: url('{{ "banner_5.jpg" | asset_url }}') 50% 12%;  background-size: cover;}
+#market-pagehelp {position: relative; width: 100%; height: 350px; background: url('{{ "banner_1.jpg" | asset_url }}') 50% 20%;  background-size: cover;}
+#market-pageartisan {position: relative; width: 100%; height: 350px; background: url('{{ "artisan_banner_1.jpg" | asset_url }}') 50% 52%;  background-size: cover;}
 
 /* Products */
   /* set up JS carosuel */
@@ -2236,7 +2256,7 @@ a.btn:hover{
   }
 }
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1050px) {
   .featured {
     max-width: 1400px !important;
     margin:0 auto!important;

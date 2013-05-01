@@ -64,6 +64,8 @@
 
   {{ 'd3.v2.js' | asset_url | script_tag }}
 
+  <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}" type="image/x-icon" />
+
   <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
   <script src="http://vjs.zencdn.net/c/video.js"></script>
   <script type="text/javascript">
@@ -76,6 +78,17 @@
     f.parentNode.insertBefore(p, f);
   }(document));
   </script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-39962369-2', 'barandbean.com');
+    ga('send', 'pageview');
+
+  </script>
 </head>
 
 <body class="{% if customer %}customer-logged-in {% endif %}template{{ template | split: '.' | first | camelize }}">
@@ -84,7 +97,7 @@
 
 <div id='market-{{ template | split: '.' | lowercase }}' class='top-banner'>
   <div class='row' id='menu-nav'>
-    <div style='position:absolute;left:10px;top:13px;font-family:"brandon-blk";text-align:center;font-size:28px;width:200px'><a href='/'>{{ 'logo.png' | asset_url | img_tag }}</a> <!--<a href='/' style='color:black'>BAR & BEAN</a></div>--></div>
+    <!--<div style='position:absolute;left:10px;top:13px;font-family:"brandon-blk";text-align:center;font-size:28px;width:200px'><a href='/'>{{ 'logo.png' | asset_url | img_tag }}</a> <a href='/' style='color:black'>BAR & BEAN</a></div></div>-->
     <div class="cart-link" id='cart-anchor' style='z-index:100;position:absolute;right:10px;margin-top:14px'>
       {% include 'cart' %}
     </div>
@@ -94,10 +107,10 @@
         {% if shop.customer_accounts_enabled %}
           {% if customer %}
           <li>
-            Welcome {{ customer.first_name }} {{ '(LOG OUT)' | customer_logout_link }}
+            WELCOME {{ customer.first_name | upcase }}  {{ ' (LOG OUT)' | customer_logout_link }}
           </li>
           <li>
-            <a href="/account">My Account</a>
+            <a href="/account">ACCOUNT</a>
           </li>
           {% else %}
           <li>
@@ -122,9 +135,10 @@
       </ul>
 
     </div>
-    <ul style='z-index:50' id='nav-list'>
+    <div style='large-6 large-centered columns'>
+      <ul style='z-index:50' id='nav-list'>
         {% for link in linklists.main-menu.links %}
-        <li class="{% if forloop.first %}first{% elsif forloop.last %}{%endif%}">
+        <li class="{% if forloop.first %}first{% elsif forloop.last %}last{%endif%}">
           {% assign child_list_handle = link.title | handleize %}
           {% if linklists[child_list_handle].links != blank %}
           <div class="has-dropdown">
@@ -142,8 +156,12 @@
             <a href="{{ link.url }}">{{ link.title | escape | upcase }}</a>
           {% endif %}
         </li>
+          {% if forloop.index == 2 %}
+            <li id='list-img'>{{'logo.png' | asset_url | img_tag }}</li>
+          {% endif %}
         {% endfor %}
       </ul>
+    </div>
   </div>
 
 
@@ -154,8 +172,9 @@
         {% if template == 'index' %}
         <div class='index-title'>
           <div class='row'>
-            <div class='large-5 large-centered columns'>
-              WELCOME TO THE CHOCOLATE PARTY
+            <div class='large-6 large-centered columns'>
+              <span>WELCOME TO</span><br>
+              <span>THE CHOCOLATE PARTY</span>
             </div>
           </div>
         </div>
@@ -164,7 +183,25 @@
         <div class='collection-title'>
           <div class='row'>
             <div class='large-6 large-centered columns'>
-              FIND YOUR BARS
+              FIND YOUR BAR
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if template == 'page.about' %}
+        <div class='pageabout-title'>
+          <div class='row'>
+            <div class='large-6 large-centered columns'>
+              CHOCOLATE IS WORTH SAVORING
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if template == 'page.help' %}
+        <div class='pageabout-title'>
+          <div class='row'>
+            <div class='large-6 large-centered columns'>
+              HOW CAN WE HELP?
             </div>
           </div>
         </div>
@@ -174,7 +211,9 @@
 
   <script type="text/javascript">
     var docked;
+    var options_docked;
     var buffer = 10;  
+    var options_buffer = 360;
 
     // lock menu-nav to top
     $(document).scroll(function(){
@@ -187,11 +226,23 @@
       }
       else if (docked && $(document).scrollTop() < buffer) {
         docked = false;
-        $('#menu-nav').css('background','');
+        $('#menu-nav').css('background','rgba(60,60,60,0.9)');
         $('#menu-nav').css('position', 'absolute');
         $('#menu-nav').css('top',0)
       }
 
+      /*if (!options_docked && $(document).scrollTop() > 350){
+        options_docked = true;
+        $('.options-style').css('position', 'fixed');
+        $('.options-style').css('top',49+'px')
+        $('.options-style').css('height',100+'px')
+        $('.options-style').css('z-index','51')
+      }
+      else if (options_docked && $(document).scrollTop() < 350) {
+        options_docked = false;
+        $('.options-style').css('position', '');
+        $('.options-style').css('top',330+'px')
+      }*/
     })
 
     $('.cart-link a').click(function(){
@@ -245,15 +296,16 @@
           <p style='font-family:"brandon-blk"'>1-877-BAR-BEAN (227-2326)</p>
         </div>
         <div class='large-4 columns'>
-          3
+          <p><a href='/pages/about'>ABOUT US</a></p>
+          <p><a href= '/pages/help'>CONTACT US</a></p>
         </div>
         <div class='large-4 columns'>
-          3
+          
         </div>
       </div>
 
       <div id="footer-left">
-        <p>&copy; {{ 'now' | date: '%Y' }} <a href="/">{{ shop.name }}</a>. All Rights Reserved.</p>
+        <p>&copy; {{ 'now' | date: '%Y' }} <a href="/">{{ shop.name }}</a>, <a href='http://www.LolliandPops.com'>Lolli and Pops</a>. All Rights Reserved.</p>
       </div>
 
     </footer>
@@ -285,6 +337,7 @@
 
   <!-- script to add cart directly from any page -->
   <script type="text/javascript">
+    $(document).scrollTop(10);
 
     $('.cart-panel').click(function(e) {
       e.stopPropagation();
@@ -297,6 +350,7 @@
     })
 
     function set_prod_hover_event(){
+      console.log('set')
 
       $('.product-grid-item').hover(function(){
         var prod_handle = $(this)[0].getAttribute('data-product');
@@ -363,6 +417,7 @@
       var $product_div = $(this).parent().parent().parent();
 
       console.log($product_div)
+      //alert('buying')
 
       var prod_id = $product_div.attr('data-id');
       var prod_handle = $product_div.attr('data-product');
@@ -610,7 +665,7 @@
               //update total price
               var total_cart_price = response.total_price
               var total_cart_items = response.item_count;
-              $('.total-price').html('$ ' + total_cart_price/100)
+              $('.total-price').html('CART TOTAL: $ ' + (total_cart_price/100).toFixed(2));
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
               //need notification strip here ***** TODO!!

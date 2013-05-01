@@ -1,4 +1,4 @@
-<div class='gridViewImageContainer action-bar-learn' data-product='{{product.handle}}' data-id='{{product.id}}' style='background: url("{{ product.featured_image | product_img_url: "medium" }}") center no-repeat;'></div>
+<div class="gridViewImageContainer action-bar-learn" data-product='{{product.handle}}' data-id='{{product.id}}' data-percent='{{ product.metafields.bar.percent }}' style='background: url("{{ product.featured_image | product_img_url: "medium" }}") center no-repeat;'></div>
 <span class='gridViewProductTitle'>{{ product.title }}</span>
 <br>
 <span class='gridViewVendorTitle'>{{ product.vendor | upcase | link_to_vendor }}</span>
@@ -8,9 +8,87 @@
 <span class='gridViewSubTags'>TAGS: {{ product.description }}</span>
 <div class='row gridViewActionContainer' style='width:100%'>
   <div class='large-6 columns'>
-    <a href='#' class='action-buy small button expand' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-{{ product.variants.first.id }}'); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', '{{product.variants.first.id }}'); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', 1); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">ADD</a>
+    <a href='#' class='action-buy-{{product.id}} small button expand' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-{{ product.variants.first.id }}'); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', '{{product.variants.first.id }}'); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', 1); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">ADD</a>
   </div>
   <div class='large-6 columns'>
     <a href'#' class='action-bar-learn small button expand' data-product='{{product.handle}}' data-id='{{product.id}}'>LEARN</a>
   </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      set_prod_hover_event();
+    // if buy is clicked
+    $('.action-buy-{{product.id}}').click(function(){
+      $('.cart-panel').hide()
+      // console.log('this' + $(this).attr('class'));
+      // console.log('this parent' + $(this).parent().attr('class'));
+      // console.log('this parent parent' + $(this).parent().parent().attr('class'))
+      // console.log('this parent parent' + $(this).parent().parent().parent().attr('class'))
+      var $product_div = $(this).parent().parent().parent();
+
+      console.log($product_div)
+      //alert('buying')
+
+      var prod_id = $product_div.attr('data-id');
+      var prod_handle = $product_div.attr('data-product');
+      var prod_isBar = $(this).attr('data-isBar')
+
+      // console.log($('#form-'+prod_id).serialize())
+      // console.log($product_div);
+      // console.log('quantity=1&id='+prod_id);
+
+      var data = $('#form-'+prod_id).serialize();
+      var url_post = '/cart/add';
+      var url_get = '/cart';
+
+      console.log('data ' + data)
+
+      var posting = $.ajax({
+        type: 'POST',
+        url: url_post, 
+        data: data,
+        dataType: 'json',
+        success: function(response){
+          var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            success: function(response){
+              console.log(response);
+              console.log(response.item_count)
+              $('#cart-count').html(response.item_count)
+              $('#product-rows-grid').html('');
+              $.each(response.items, function(i,item){
+                console.log(item);
+                addCartUX(item);
+              });
+
+              //update total price
+              var total_cart_price = response.total_price;
+              var total_cart_items = response.item_count;
+              $('.price').html('$ ' + total_cart_price/100)
+              $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
+
+              if (!prod_isBar){
+                //make cart panel appear for 3 seconds
+                $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
+                $('.cart-panel').show();
+                $('.cart-panel').animate({
+                  top:''
+                },1500, function(){
+                  $('.cart-panel').delay(3000).fadeOut('slow')
+                })
+              }
+              //notify
+              notify_about_purchase();
+
+            },
+            error: function(){alert('failed caro') }
+          })
+        },
+        error: function(){alert('failed caro') }
+      });
+    })
+});
+</script>

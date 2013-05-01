@@ -1,10 +1,10 @@
 
 
 <div class='row options-style'>
-  <ul class='large-block-grid-3' style='width:100%'>
-    <li ><a href="#" data-dropdown='brand-filters'>SHOP BY BRAND</a></li>
-    <li style='font-size:30px;color:black;background:white'>-FILTERS-</li>
-    <li><a href="#" data-dropdown='flavor-filters'>SHOP BY FLAVOR PROFILE</a></li>
+  <ul class='large-block-grid-3'>
+    <li ><a href="#" data-dropdown='brand-filters'>BY BRAND</a></li>
+    <li style='color:white;background:rgb(84,84,84)'><a href="#" data-dropdown='percent-filters'>BY PERCENTAGE</a></li>
+    <li><a href="#" data-dropdown='flavor-filters'>BY FLAVOR PROFILE</a></li>
   </ul>
 </div>
 
@@ -36,14 +36,20 @@
       <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
     </ul>
     <ul class='f-dropdown options' id='flavor-filters' data-dropdown-content data-option-key='filter'>
-      <li><a class='option-value' id='chocolatey' data-option-value='.chocolatey'>Chocolatey</a></li>
-      <li><a class='option-value' id='citrus' data-option-value='.citrus'>Citrus</a></li>
-      <li><a class='option-value' id='fruity' data-option-value='.fruity'>Fruity</a></li>
-      <li><a class='option-value' id='floral' data-option-value='.floral'>Floral</a></li>
-      <li><a class='option-value' id='earthy' data-option-value='.earthy'>Earthy</a></li>
-      <li><a class='option-value' id='nutty' data-option-value='.nutty'>Nutty</a></li>
-      <li><a class='option-value' id='spicy' data-option-value='.spicy'>Spicy</a></li>
-      <li><a class='option-value' id='creamy' data-option-value='.creamy'>Creamy</a></li>
+      <li><a class='option-value' href='#' id='chocolatey' data-option-value='.chocolatey'>Chocolatey</a></li>
+      <li><a class='option-value' href='#' id='citrus' data-option-value='.citrus'>Citrus</a></li>
+      <li><a class='option-value' href='#' id='fruity' data-option-value='.fruity'>Fruity</a></li>
+      <li><a class='option-value' href='#' id='floral' data-option-value='.floral'>Floral</a></li>
+      <li><a class='option-value' href='#' id='earthy' data-option-value='.earthy'>Earthy</a></li>
+      <li><a class='option-value' href='#' id='nutty' data-option-value='.nutty'>Nutty</a></li>
+      <li><a class='option-value' href='#' id='spicy' data-option-value='.spicy'>Spicy</a></li>
+      <li><a class='option-value' href='#' id='creamy' data-option-value='.creamy'>Creamy</a></li>
+    </ul>
+    <ul class='f-dropdown options' id='percent-filters' data-dropdown-content data-option-key='filter'>
+      <li><a class='option-value' href='#' id='forty' data-option-value='.forty'> Below 40%</a></li>
+      <li><a class='option-value' href='#' id='sixty' data-option-value='.sixty'> 41% to 60%</a></li>
+      <li><a class='option-value' href='#' id='eighty' data-option-value='.eighty'> 61% to 80%</a></li>
+      <li><a class='option-value' href='#' id='hundred' data-option-value='.hundred'> Above 80%</a></li>
     </ul>
 
 <div id="col-main" class="{{ collection.handle }}">
@@ -52,10 +58,10 @@
 <div class='row' id='filter-breadcrumbs' style='display:none'>
   <span style="float:left;padding-right:5px">SELECTED FILTERS: </span>
   <div id='show-filter-choices'></div>
-  <div id='nav-select'>
+  <!--<div id='nav-select'>
     <button class='grid-select'>Grid</button>
     <button class='bars'>Bars</button>
-  </div>
+  </div>-->
 </div>
 
 
@@ -87,7 +93,12 @@
         <div class="product-gridView clearfix">
           {% for product in collection.products %}
             <!--{% cycle 'group1': '<div class="row" style="padding-bottom:10px;margin-bottom:10px;border-bottom: 1px solid grey">', '', '', '' %}-->
-              <div class='large-3 columns gridItem {% for tag in product.tags %} {{tag}} {% endfor %}' style="float:left" data-product='{{product.handle}}' data-id='{{product.variants.first.id }}' >
+              {% capture test_40 %} {{ product.metafields.bar.percent | minus:41 }} {% endcapture %}
+              {% capture test_60 %} {{ product.metafields.bar.percent | minus:61 }} {% endcapture %}
+              {% capture test_80 %} {{ product.metafields.bar.percent | minus:81 }} {% endcapture %}
+              {% capture test_100 %} {{ product.metafields.bar.percent | minus:101 }} {% endcapture %}
+
+              <div class="large-3 columns gridItem {% for tag in product.tags %} {{tag}} {% endfor %} {% if test_40 contains '-' %}forty{% elsif test_60 contains '-' %}sixty{% elsif test_80 contains '-' %}eighty{% elsif test_100 contains '-' %}hundred{% endif %}" style="float:left" data-product='{{product.handle}}' data-id='{{product.variants.first.id }}' data-isBar='true' data-percent='{{ product.metafields.bar.percent }}'>
                 {% include 'product-grid-item-OLD' %}
               </div>
             <!--{% cycle 'group2': '', '', '', '</div>' %}
@@ -124,6 +135,11 @@
     fitRows: {
       columnWidth: 220,
       rowHeight:360
+    },
+    getSortData: {
+    percent : function ( $elem ) {
+        return $elem.attr('data-percent');
+      }
     }
   });
 
@@ -173,12 +189,12 @@
             //$collection.isotope('appended', $( item )) 
           })
           $collection.isotope('reLayout');
-          set_prod_hover_event();
         });
       }
     }
     getItems();
   }
+
 
   // end of scratch JS
 
@@ -204,13 +220,14 @@
   var filters = [];
   var sorters = [];
 
-  //console.log($option_values)
+  console.log('option values');
+  console.log($option_values)
 
   $option_values.on('click', apply_filter);
 
   // if any of the filters are clicked
   function apply_filter(){ 
-      //console.log('this div '+ $(this).attr('class'));
+    console.log('this div '+ $(this).attr('class'));
 
     // find out if it's a filter or a sorter
     $option_key = $(this).parent().parent();
@@ -278,6 +295,19 @@
       $.each(filters, function(i,item){
         filter_list_item = item.split('.')[1];
         //console.log(filter_list_item.toUpperCase());
+        if (filter_list_item == 'forty'){
+          filter_list_item = 'Below 40%';
+        }
+        else if (filter_list_item == 'sixty'){
+          filter_list_item = '40% to 60%';
+        }
+        else if (filter_list_item == 'eighty'){
+          filter_list_item = '61% to 80%';
+        }
+        else if (filter_list_item == 'hundred') {
+          filter_list_item = 'Above 80%';
+        }
+
         $('#show-filter-choices').append('<span data-option-key=\'filter\'>' +filter_list_item.toUpperCase() + ' <span><a class="inline-summary" style="cursor:pointer" data-option-value=\''+item+'\'>X</a></span></span>'+' ');
         $('.inline-summary').on('click', remove_filter);
       })
@@ -341,10 +371,15 @@
       //console.log('key ' + keys[i] + ' value ' + v)
       var options = {};
       options[keys[i]] = v;
-      $('.product-grid').isotope(options)
-      $('.product-gridView').isotope(options)
+      //$('.product-grid').isotope(options)
+      //$('.product-gridView').isotope(options)
     });
     
+    var selector = filters.join('');
+
+    $('.product-gridView').isotope({ filter:selector })
+    $('.product-grid').isotope({ filter:selector })
+
     $option_key.remove();
   }
 
