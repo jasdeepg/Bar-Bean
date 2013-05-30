@@ -3,24 +3,28 @@
 <br>
 <span class='gridViewVendorTitle'>{{ product.vendor | upcase | link_to_vendor }}</span>
 <br>
-<span class='gridViewSubTitle'>Price {{ product.price | money_with_currency }}</span>
+<span class='gridViewSubTitle'>{{ product.price | money }}</span>
 <br>
 <span class='gridViewSubTags'>TAGS: {{ product.description }}</span>
 <div class='row gridViewActionContainer' style='width:100%'>
-  <div class='large-6 columns'>
-    <a href='#' class='action-buy-{{product.id}} small button expand' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-{{ product.variants.first.id }}'); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', '{{product.variants.first.id }}'); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', 1); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">ADD</a>
+  <div class='large-6 columns btn-col'>
+    <a href='#' data-isBar='false' class='action-buy-{{product.id}} small button expand' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-{{ product.variants.first.id }}'); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', '{{product.variants.first.id }}'); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', 1); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">ADD</a>
   </div>
-  <div class='large-6 columns'>
+  <div class='large-6 columns btn-col'>
     <a href'#' class='action-bar-learn small button expand' data-product='{{product.handle}}' data-id='{{product.id}}'>LEARN</a>
   </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function(){
-      set_prod_hover_event();
+
+    $('.action-buy-{{product.id}}').click(function(e){
+      e.stopPropagation();
+    })
+
     // if buy is clicked
     $('.action-buy-{{product.id}}').click(function(){
-      $('.cart-panel').hide()
+      //$('.cart-panel').hide()
       // console.log('this' + $(this).attr('class'));
       // console.log('this parent' + $(this).parent().attr('class'));
       // console.log('this parent parent' + $(this).parent().parent().attr('class'))
@@ -67,18 +71,18 @@
               //update total price
               var total_cart_price = response.total_price;
               var total_cart_items = response.item_count;
-              $('.price').html('$ ' + total_cart_price/100)
+              $('.total-price').html('CART TOTAL: $ ' + total_cart_price/100)
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
-              if (!prod_isBar){
+              if (prod_isBar=='false'){
                 //make cart panel appear for 3 seconds
-                $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
                 $('.cart-panel').show();
+                $('.cart-panel').css('top','-602px');
                 $('.cart-panel').animate({
-                  top:''
+                  top:'0px'
                 },1500, function(){
                   $('.cart-panel').delay(3000).fadeOut('slow')
-                })
+                });
               }
               //notify
               notify_about_purchase();
@@ -87,7 +91,7 @@
             error: function(){alert('failed caro') }
           })
         },
-        error: function(){alert('failed caro') }
+        error: function(){notify_about_stock('brand','bar name')}
       });
     })
 });

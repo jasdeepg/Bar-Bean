@@ -7,10 +7,10 @@
       <hr style='margin-top:10px;margin-bottom:10px;'>
       SHOPPING CART
       <hr style='margin-top:10px;margin-bottom:10px;'>
-      <div id='product-rows-grid' style='overflow:auto;height:400px'>
+      <div id='product-rows-grid' style='overflow:auto;height:250px'>
       {% for item in cart.items %}
         <div class='product-preview row' id='product-cart-{{ item.id }}' style='position:relative'>
-          <div class='clear-item' style='z-index:50;position:absolute;top:3px;right:3px;' data-id='{{ item.variant.id }}'>X</div>      
+          <!--<div class='clear-item' style='z-index:50;position:absolute;top:3px;right:3px;' data-id='{{ item.variant.id }}'>X</div>-->
           <div class='large-3 columns bar-image' style="width:150px;height:150px;background: url('{{ item.product.featured_image | product_img_url: 'large' |}}') center center no-repeat;background-size:cover">{{ item.quantity }}</div>
           <div class='large-8 columns' id='description'>
           <div class='row'>
@@ -37,7 +37,7 @@
     </div>
       <div class='row'>
         <div id='checkout-action-button' class='large-12 columns' style='margin-top:3px'>
-          <span style='font-family:"brandon-reg";font-size:18px'>Free shipping for orders over $50!</span>
+          <span style='font-family:"brandon-reg";font-size:18px'>Free shipping if you order more than 5 bars!</span>
           <a href="/cart/add" class='button success' style='width:100%;margin-top:10px'>CHECKOUT/EDIT</a>
         </div>
         <div class='cart-summary'>

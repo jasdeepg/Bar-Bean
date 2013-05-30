@@ -1,0 +1,114 @@
+<div class='row' id='giftSummary'>
+	<!-- this is where the gift summary is -->
+	{% for product in gift.products %}
+		<div class='bar-peak' style='background: url("{{ product.featured_image | product_img_url: "large" }}") no-repeat;'>
+		</div>
+	{% endfor %}
+	<div id='marketing-text'>
+		<div id='emphasis'>
+			{{gift.title | upcase}}
+		</div>
+		<div class='description'>
+			{{ gift.description }}
+		</div>
+		<div class='handle-hidden' id='{{gift.handle}}-handle-hidden'>
+			{{ gift.description }}
+		</div>
+		<br>
+		    <a href='#' data-isBar='false' data-whichGift='{{gift.handle}}' class='action-buy-set-{{gift.handle}} small button' onclick="$('body').scrollTop(); var f = document.createElement('form'); f.style.display = 'none'; f.setAttribute('id','form-'+$('#{{gift.handle}}-handle-hidden > #product-handle').html()); this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href; var v = document.createElement('input'); v.setAttribute('type', 'hidden'); v.setAttribute('name', 'id'); v.setAttribute('value', $('#{{gift.handle}}-handle-hidden > #product-handle').html()); f.appendChild(v); var q = document.createElement('input'); q.setAttribute('type', 'hidden'); q.setAttribute('name', 'quantity'); q.setAttribute('value', 1); f.appendChild(q); var r = document.createElement('input'); r.setAttribute('type', 'hidden'); r.setAttribute('name', 'return_to'); r.setAttribute('value', 'back'); return false;">BUY</a>
+	</div>
+</div>
+<div class='row centered' id='giftBars'>
+	<!-- this is where the individual bars are showcased -->
+	{% for product in gift.products %}
+		<div class='{% if forloop.first %}large-offset-1{% endif %} large-2 columns giftBarDesc'>
+			<div class='giftImgContainer' style='background: url("{{ product.featured_image | product_img_url:"medium" }}") center no-repeat;'></div>
+			<div class='giftFlavors'>{{ product.description }}</div>
+		</div>
+	{% endfor %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+    $('.action-buy-set-{{gift.handle}}').click(function(e){
+      e.stopPropagation();
+    })
+
+    // if buy is clicked
+    $('.action-buy-set-{{gift.handle}}').click(function(){
+      var gift = $(this).attr('data-whichgift');
+      console.log(gift);
+      var prod_id = $('#'+gift+'-handle-hidden > #product-handle').html(); // grab product handle
+      console.log(prod_id);
+
+      var data = $('#form-'+prod_id).serialize();                 // serliaze form to submit
+      var url_post = '/cart/add';                                 // url to add to cart
+      var url_get = '/cart';                                      // url to get information from cart
+
+      console.log(data);
+
+      // POSTING to cart/add to update cart with summer set purchase
+      var posting = $.ajax({      
+        type: 'POST',
+        url: url_post, 
+        data: data,
+        dataType: 'json',
+        success: function(response){  // if it's successful get the cart data so we can update all UX elements
+          var get_cart_data = $.ajax({
+            type: 'GET',
+            url: url_get, 
+            dataType: 'json',
+            success: function(response){
+              $('#cart-count').html(response.item_count)  
+              $('#product-rows-grid').html('');           // clear the cart UX 
+              $.each(response.items, function(i,item){    // re-populate the cart UX
+                addCartUX(item);                          // call this function to construct each cart UX element
+              });
+
+              //update total price
+              var total_cart_price = response.total_price; 
+              var total_cart_items = response.item_count;
+              $('.total-price').html('CART TOTAL: $ ' + total_cart_price/100)   // update the cart UX to include the total cart price
+              $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());    // update the cart UX to include the total item count
+
+                //make cart panel appear for 3 seconds; slide down from top of screen before fading out
+                $('.cart-panel').show();
+                $('.cart-panel').css('top','-602px');
+                $('.cart-panel').animate({
+                  top:'0px'
+                },1500, function(){
+                  $('.cart-panel').delay(3000).fadeOut('slow')
+                });
+
+              //notify the user that it has been added to their cart.
+              notify_about_purchase();
+
+            },
+            error: function(){}  // alert if we can't get the cart data
+          })
+        },
+        error: function(){notify_out_of_stock_set();}  // alert if we can't update the cart
+      });
+    })
+
+  function notify_out_of_stock_set(){
+    $('#out-of-stock').remove();
+
+    // check if last character is a % -- if it is, remove
+    var item_name = '{{gift.title}}';
+    if (item_name.substring(item_name.length - 1, item_name.length) == '%') {
+      item_name = item_name.substring(0,item_name.length-1);
+    }
+    else {
+      item_name = item_name;
+    }
+
+    var $bottom_strip = $('<div id=\'out-of-stock\'>UH OH, WE\'VE RUN OUT OF THIS ITEM. BE THE <a href=\'/pages/reserve?vendor=Bar%20and%20Bean&bar='+item_name+'\' style=\'text-decoration:underline;font-family:"brandon-blk";\'>FIRST TO KNOW</a> WHEN WE RESTOCK.</div>');
+    $('body').append($bottom_strip);
+
+    $bottom_strip.delay(3000).fadeOut();
+  }
+
+});
+</script>

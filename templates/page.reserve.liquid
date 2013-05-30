@@ -1,0 +1,76 @@
+<div id="col-main">
+  {% form 'contact' %}
+    {% if form.posted_successfully? %}
+      <div style='background-color:rgb(154,205,50)'>Thanks for your reservation! We'll let you know when that bar is available.</div>
+    {% endif %}
+    
+    {% if form.errors %}
+      <div style='background-color:rgb(205,92,92)'>
+      {% for field in form.errors %}
+        {{ field }} - {{ form.errors.messages[field] }}
+      {% endfor %}
+  	   </div>
+    {% endif %}
+
+   	<div class='row minor-break'>
+	    RESERVE A BAR
+	</div>
+    <table style='padding-top:10px'>
+      <tr>
+        <td>Email:</td>
+        <td><input style='width:50%' type="text" id="contact_email" name="contact[email]"/></td>
+      </tr>
+      <tr>
+        <td>Which bar?:</td>
+        <td><input style='width:50%' type="text" id="contact_bar" name="contact[SKU]"/></td>
+      </tr>
+      <tr>
+        <td>How many?:</td>
+        <td><input type="number" style='width:100px' id="contact_quantity" name="contact[quantity]"/></td>
+      </tr>
+
+      <tr>
+        <td>Any other thoughts?:</td>
+        <td>
+          <textarea id="contact_note" name="contact[note]"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><input type='submit' class="submit" /></td>
+      </tr>
+    </table>
+  {% endform %}
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    
+    //grab the entire query string
+    var query = document.location.search.replace('?', '');
+    
+    //extract each field/value pair
+    query = query.split('&');
+
+    var field_value;
+    
+    //run through each pair
+    for (var i = 0; i < query.length; i++) {
+    
+      //split up the field/value pair into an array
+      var field = query[i].split("=")[0]
+      var value = query[i].split("=")[1].split('%20').join(' ');
+
+      if (i==0){
+      	field_value = value;
+      }
+      else {
+      	field_value = field_value + ' - ' + value;
+      }
+      
+      //target the field and assign its value
+      //$("input[name='" + field[0] + "'], select[name='" + field[0] + "']").val(field[1]);
+    }
+
+    $('input[name="contact[SKU]"], select[name="contact[SKU]"]').val(field_value)
+  });
+</script>

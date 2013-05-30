@@ -1,12 +1,12 @@
-<div class='row'>
-	<div id='hide-link' style='display:none'>{{ 'Mast Brothers' | link_to_vendor}}</div>
+<div class='row' id='artisan-row'>
+	<div id='hide-link' style='display:none'>{{ 'Patric' | link_to_vendor}}</div>
 	<div class='large-6 columns'>
 		<div class='featured-info'>
 			<div id='emphasis'>
-				MAST BROTHERS
+				PATRIC CHOCOLATE
 			</div>
 			<div id='description'>
-				Rick and Michael Mast are meticulous in their sourcing practices, supporting small farms and co-ops around the world. Props for their short ingredient list:  cacao and sugar, a true feat to achieve this smooth mouthfeel.
+				Patric is an American craft chocolate company that makes chocolate from the cocoa bean in Missouri. Each bar is handcrafted with beans from the Sambirano Valley in Madagascar. Patric has gone from little more than a dream to a respected artisan chocolate maker in only a few short years.
 			</div>
 			<div id='show-link'>
 				<a href="#">View products</a>
@@ -20,8 +20,11 @@
 </div>
 <div class='row'>
 	<div class='large-6 columns hor-big' id='artisan-pic1'></div>
-	<!--<iframe class='large-6 columns hor-big' src="http://player.vimeo.com/video/13664547" width="715px" height="263px" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>-->
-	<div class='large-6 columns hor-big' id='artisan-vid'>
+	<iframe class='large-6 columns hor-big' width="560" height="315" src="http://www.youtube.com/embed/KHzY88J9C1A" frameborder="0" allowfullscreen style='padding:0'></iframe>
+	<!--<div class='large-6 columns hor-big' id='artisan-vid'>-->
+	<br>
+	<br>
+	<br>
 </div>
 </div>
 
@@ -29,4 +32,6 @@
 	console.log($('#hide-link a').attr('href'));
 	var link = $('#hide-link a').attr('href')
 	$('#show-link a').attr('href', link)
+
+	$('#artisan-row .small-square-art').css('height', $('#artisan-row').height())
 </script>

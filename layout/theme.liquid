@@ -54,6 +54,8 @@
 
   {{ 'foundation.css' | asset_url | stylesheet_tag }}
 
+  {{ 'foundation.dropdown.js' | asset_url | stylesheet_tag }}
+
   {{ 'jquery.min.js' | asset_url | script_tag }}
 
   {{ 'jquery.masonry.min.js' | asset_url | script_tag }}
@@ -80,14 +82,18 @@
   </script>
 
   <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    var _gaq = _gaq || [];
+    var pluginUrl = 
+       '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39962369-2']);
+    _gaq.push(['_trackPageview']);
 
-    ga('create', 'UA-39962369-2', 'barandbean.com');
-    ga('send', 'pageview');
-
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
   </script>
 </head>
 
@@ -97,7 +103,7 @@
 
 <div id='market-{{ template | split: '.' | lowercase }}' class='top-banner'>
   <div class='row' id='menu-nav'>
-    <!--<div style='position:absolute;left:10px;top:13px;font-family:"brandon-blk";text-align:center;font-size:28px;width:200px'><a href='/'>{{ 'logo.png' | asset_url | img_tag }}</a> <a href='/' style='color:black'>BAR & BEAN</a></div></div>-->
+    <div id='free-shipping' style='position:absolute;left:10px;top:16px;font-family:"brandon-blk";text-align:center;font-size:14px;'><a href='/pages/shipping-and-handling-bar-and-bean'>FREE SHIPPING OVER 5 BARS!</a></div>
     <div class="cart-link" id='cart-anchor' style='z-index:100;position:absolute;right:10px;margin-top:14px'>
       {% include 'cart' %}
     </div>
@@ -116,27 +122,17 @@
           <li>
             {{ 'LOG IN' | customer_login_link }}
           </li>
-          {% if shop.customer_accounts_optional %} 
-          <li>
-            {{ 'REGISTER' | customer_register_link }}
-          </li>
-          {% endif %}
           {% endif %}
         {% endif %}
-
-        
-
       <!--  
         Checkout button
         <li class="checkout-link">
           <a href="/cart" class="btn">Check out</a>
         </li> -->
-
       </ul>
-
     </div>
     <div style='large-6 large-centered columns'>
-      <ul style='z-index:50' id='nav-list'>
+      <ul style='z-index:100' id='nav-list'>
         {% for link in linklists.main-menu.links %}
         <li class="{% if forloop.first %}first{% elsif forloop.last %}last{%endif%}">
           {% assign child_list_handle = link.title | handleize %}
@@ -157,7 +153,7 @@
           {% endif %}
         </li>
           {% if forloop.index == 2 %}
-            <li id='list-img'>{{'logo.png' | asset_url | img_tag }}</li>
+            <a href='/'><li id='list-img'>{{'logo.png' | asset_url | img_tag }}</li></a>
           {% endif %}
         {% endfor %}
       </ul>
@@ -205,14 +201,29 @@
             </div>
           </div>
         </div>
-        {% endif %}
+      {% endif %}
+      {% if template == 'page.gifts' %}
+        <div class='pagegifts-title'>
+          <div class='row'>
+            <div class='large-7 large-centered columns'>
+              DISCOVER DELICIOUS
+            </div>
+          </div>
+        </div>
+      {% endif %}
       </div>
     </div>
 
   <script type="text/javascript">
+    // don't cache AJAX requests
+    $.ajaxSetup({
+      cache: false
+    });
+
+    // dock/undock navigation
     var docked;
     var options_docked;
-    var buffer = 10;  
+    var buffer = 6;  
     var options_buffer = 360;
 
     // lock menu-nav to top
@@ -220,13 +231,14 @@
 
       if (!docked && $(document).scrollTop() > 0){
         docked = true;
+        $('#menu-nav').css('background','rgba(60,60,60,0.9)');
         $('#menu-nav').css('position', 'fixed');
         $('#menu-nav').css('top',0)
         $('#menu-nav').css('height',49+'px')
       }
       else if (docked && $(document).scrollTop() < buffer) {
         docked = false;
-        $('#menu-nav').css('background','rgba(60,60,60,0.9)');
+        $('#menu-nav').css('background','');
         $('#menu-nav').css('position', 'absolute');
         $('#menu-nav').css('top',0)
       }
@@ -258,11 +270,6 @@
       }
     })
 
-    function showPanel(){
-      $('.cart-panel').fadeIn(200);
-      $('.cart-panel').css('display', 'block')
-    }
-
     function testFunction(){
       alert('test')
     }
@@ -288,19 +295,42 @@
     <footer id="bottom">
       <div class='row footer-info'>
         <div class='large-4 columns'>
-          <p>BAR & BEAN</p>
-          <p>39812 MISSION BLVD</p>
-          <p>FREMONT, CA 94131</p>
+          <p><a href='/'>BAR & BEAN</a></p>
+          <p>MADE IN CALIFORNIA</p>
           <br>
           <p style='font-family:"brandon-blk"'>BOX@BARANDBEAN.COM</p>
-          <p style='font-family:"brandon-blk"'>1-877-BAR-BEAN (227-2326)</p>
+          <p style='font-family:"brandon-blk"'>(415) 237-3068</p>
         </div>
-        <div class='large-4 columns'>
+        <div class='large-4 columns' style='color:white'>
+          <p><a href='/'>HOME</a></p>
           <p><a href='/pages/about'>ABOUT US</a></p>
           <p><a href= '/pages/help'>CONTACT US</a></p>
+          <p><a href='/pages/shipping-and-handling-bar-and-bean'>SHIPPING AND HANDLING</a></p>
         </div>
         <div class='large-4 columns'>
-          
+          <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+            <a class="addthis_button_facebook"
+              addthis:url='http://www.barandbean.com'
+              addthis:title="Share the word about @BarandBean. A collection of the world's best chocolate bars."
+              addthis:description='Find your bar'></a>
+            <a id='twitter' href='http://www.twitter.com/BarandBean'>{{ 'twitter_icon.png' | asset_url | img_tag }}</a>
+            <a class="addthis_button_pinterest"></a>
+            <script type="text/javascript">
+              var addthis_share = addthis_share || {}
+                addthis_share = {
+                  passthrough : {
+                  twitter: {
+                  via: "BarandBean",
+                  text: "TEXT"
+                  }
+                }
+              }
+            </script>
+            </div>
+            <br>
+            <p style='font-family:"brandon-reg";color:white'>Tell other people where to find the perfect bar.</p>
+            <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5181cf98692f62ce"></script>
         </div>
       </div>
 
@@ -337,7 +367,7 @@
 
   <!-- script to add cart directly from any page -->
   <script type="text/javascript">
-    $(document).scrollTop(10);
+    $(document).scrollTop(5);
 
     $('.cart-panel').click(function(e) {
       e.stopPropagation();
@@ -357,12 +387,12 @@
         var prod_url = $(this)[0].getAttribute('data-url');
         var $item_holder = $(this)
 
-        $('#hover-modal-'+prod_handle).fadeIn(250);
+        $('.hover-modal-'+prod_handle).fadeIn(250);
 
       }).mouseleave(function(){
         var prod_handle = $(this)[0].getAttribute('data-product');
         
-        $('#hover-modal-'+prod_handle).fadeOut(250);
+        $('.hover-modal-'+prod_handle).fadeOut(250);
       })
       // if learn is clicked
       $('.action-learn').click(function(){
@@ -386,8 +416,6 @@
       })
 
       $('.action-bar-learn').click(function(){
-        var prod_isBar = $(this).attr('data-isBar');
-
         // need to get product data/img from JSON request
         // what do i need to send to the URL to get my product info?**
         var $product_div = $(this);
@@ -409,7 +437,7 @@
 
     // if buy is clicked
     $('.action-buy').click(function(){
-      $('.cart-panel').hide()
+      //$('.cart-panel').hide()
       // console.log('this' + $(this).attr('class'));
       // console.log('this parent' + $(this).parent().attr('class'));
       // console.log('this parent parent' + $(this).parent().parent().attr('class'))
@@ -456,15 +484,15 @@
               //update total price
               var total_cart_price = response.total_price;
               var total_cart_items = response.item_count;
-              $('.price').html('$ ' + total_cart_price/100)
+              $('.total-price').html('CART TOTAL: $ ' + total_cart_price/100)
               $('#total-cart-count').html(total_cart_items+' '+pluralizeBars(total_cart_items).toUpperCase());
 
               if (!prod_isBar){
                 //make cart panel appear for 3 seconds
-                $('.cart-panel').css('top',-$('.cart-panel').height()+'px');
                 $('.cart-panel').show();
+                $('.cart-panel').css('top','-602px');
                 $('.cart-panel').animate({
-                  top:''
+                  top:'0px'
                 },1500, function(){
                   $('.cart-panel').delay(3000).fadeOut('slow')
                 })
@@ -476,7 +504,7 @@
             error: function(){alert('failed caro') }
           })
         },
-        error: function(){alert('failed caro') }
+        error: function(){notify_about_stock('','');}
       });
     })
   }
@@ -542,39 +570,46 @@
                                 <span style=\'font-family:"brandon-blk";font-size:24px;\'>'+item.vendor.toUpperCase()+'</span><br><span style=\'font-family:"brandon-reg";font-size:21px;\'>'+item.title+'</span><br><span style=\'font-family:"brandon-reg";font-size:19px;color:red\'>Price: $'+(item.price/100).toFixed(2)+'</span>\
                                 <br>\
                                 <br>\
+                                <div id="popup-nav">\
+                                  <a id=\'show-desc\' style=\'cursor:pointer\'>DESCRIPTION</a> <a id=\'show-maker\' style=\'cursor:pointer\'>MEET THE MAKER</a>\
+                                </div>\
+                              </div>\
+                              <div id=\'description-tab\'>\
                                 <span class=\'main-desc\' style="font-family:\'brandon-reg\';font-size:19px;">'+item.description+'</span>\
-                              </div>\
-                              <div class=\'row\' style=\'margin-left:-34px\'>\
-                                <div class=\'large-4 columns flav\' style=\'font-size:13px\'>\
-                                  <label class=\'prod-sub-heading\'>FLAVORS</label>\
-                                  '+item.description+'\
-                                </div>\
-                                <div class=\'large-4 columns dim\' style=\'font-size:13px\'>\
-                                  <label class=\'prod-sub-heading\'>DIMENSIONS</label>\
-                                  '+item.description+'\
-                                </div>\
-                                <div class=\'large-4 columns\'>\
-                                </div>\
-                              </div>\
-                              <div class=\'row\' style=\'margin-left:-36px\'>\
-                                  <div class="large-6 columns" style="line-height:35px;margin-top:20px"><label class=\'prod-sub-heading\' style=\'display:block;float:left;width:50%;font-size:13px;\'>NUMBER OF BARS:</label> <input style="overflow:hidden;width:40px;margin-left:200px; border: 5px solid black" type="text" name="fbars" id="num-bars" value="1"></div>\
-                                    <div class="large-6 columns"><a href="#cart-anchor" class=\'action-popup-buy large button expand\' style="color:black;font-family:\'brandon-reg\';font-size:21px;background:rgb(239,239,239)" data-id=\''+item.variants[0].id+'\' onclick="$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var q = document.createElement(\'input\'); q.setAttribute(\'type\', \'hidden\'); q.setAttribute(\'name\', \'quantity\'); q.setAttribute(\'value\', $(\'#num-bars\').val()); f.appendChild(q); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">ADD TO CART</a></div></div>\
-                            </div>'); // put info highlights here (maybe from product description?)**
-
-      /*var $action_column = $('<div class="large-4 columns" style="padding:45px;height:100%">\
-                                <div style="background:gray;padding:20px;height:100%">\
-                                  <div style="background:white;padding:15px;height:100%">\
-                                    <div class="large-12 columns" style="font-size:100px;font-family:\'brandon-blk\';text-align:center;height:160px;line-height:160px">$'+item.price/100+'</div>\
-                                    <div class="large-12 columns" style="font-family:\'brandon-reg\';text-align:center"><i>Free shipping over $50</i></div>\
-                                    <hr style="padding:0px;margin:5px;">\
-                                    <div class="row"><div class="large-6 columns" style="line-height:35px;text-align:right">Number of bars: </div><div class="large-6 columns"><input style="overflow:hidden;width:35px" type="text" name="fbars" id="num-bars" value="1"></div></div>\
-                                    <div class="large-12 columns"><a href="#cart-anchor" class=\'action-popup-buy large button expand\' style="font-family:\'brandon-blk\';"" data-id=\''+item.variants[0].id+'\' onclick="$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var q = document.createElement(\'input\'); q.setAttribute(\'type\', \'hidden\'); q.setAttribute(\'name\', \'quantity\'); q.setAttribute(\'value\', $(\'#num-bars\').val()); f.appendChild(q); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">ADD TO CART</a></div>\
+                                <div class=\'row\' style=\'margin-left:-34px\'>\
+                                  <div class=\'large-4 columns flav\' style=\'font-size:13px\'>\
+                                    <label class=\'prod-sub-heading\'>FLAVORS</label>\
+                                    '+item.description+'\
+                                  </div>\
+                                  <div class=\'large-4 columns dim\' style=\'font-size:13px\'>\
+                                    <label class=\'prod-sub-heading\'>DIMENSIONS</label>\
+                                    '+item.description+'\
+                                  </div>\
+                                  <div class=\'large-4 columns\'>\
                                   </div>\
                                 </div>\
-                              </div>'); // put actions here*/
-      var $close_window = $('<span style="cursor:pointer;position:absolute;top:10px;right:10px;font-size:24px" onClick="$(\'#current-highlighted-product\').hide();$(\'#focus-dim\').hide();">X</span>'); // this is the big X at the top right of the pop-up
+                              </div>\
+                              <div id=\'meet-maker-tab\' style="display:none;font-family:\'brandon-reg\';font-size:19px;"">\
+                                '+item.description+'\
+                              </div>\
+                            </div>'); // put info highlights here (maybe from product description?)**
+
+      if (item.variants[0].inventory_quantity > 0){
+
+        var $action_row = $('<div class=\'row\' id=\'popup-action-row\' style=\'margin-left:-36px\'>\
+                              <div class="large-6 columns" style="line-height:35px;margin-top:20px"><label class=\'prod-sub-heading\' style=\'display:block;float:left;width:50%;font-size:13px;\'>NUMBER OF BARS:</label> <input style="overflow:hidden;width:40px;border: 5px solid black;float:left" type="text" name="fbars" id="num-bars" value="1"></div>\
+                                <div class="large-6 columns"><a href="#cart-anchor" class=\'action-popup-buy large button expand\' style="color:black;font-family:\'brandon-reg\';font-size:21px;background:rgb(154,205,50)" data-id=\''+item.variants[0].id+'\' onclick="$(\'body\').scrollTop(); var f = document.createElement(\'form\'); f.style.display = \'none\'; f.setAttribute(\'id\',\'form-popup-'+item.variants[0].id+'\'); this.parentNode.appendChild(f); f.method = \'POST\'; f.action = this.href; var v = document.createElement(\'input\'); v.setAttribute(\'type\', \'hidden\'); v.setAttribute(\'name\', \'id\'); v.setAttribute(\'value\', \''+item.variants[0].id+'\'); f.appendChild(v); var q = document.createElement(\'input\'); q.setAttribute(\'type\', \'hidden\'); q.setAttribute(\'name\', \'quantity\'); q.setAttribute(\'value\', $(\'#num-bars\').val()); f.appendChild(q); var r = document.createElement(\'input\'); r.setAttribute(\'type\', \'hidden\'); r.setAttribute(\'name\', \'return_to\'); r.setAttribute(\'value\', \'back\'); return false;">ADD TO CART</a></div></div>\')');
+      }
+      else {
+        var $action_row = $('<div class=\'row\' id=\'popup-action-row\' style=\'margin-left:-36px\'>\
+                      <div class="large-6 columns" style="line-height:35px;margin-top:20px"><label class=\'prod-sub-heading\' style=\'display:block;font-size:13px;text-align:center\'>OUT OF STOCK</div>\
+                        <div class="large-6 columns"><a href="/pages/reserve?vendor='+item.vendor+'&bar='+item.title+'" class=\'large button expand\' style="color:black;font-family:\'brandon-reg\';font-size:21px;background:rgb(205,92,92)" data-id=\''+item.variants[0].id+'\'>RESERVE</a></div></div>\')');
+      }
+
+      var $close_window = $('<span style="cursor:pointer;position:absolute;top:10px;right:10px;font-size:24px" onClick="$(\'#current-highlighted-product\').hide();$(\'#focus-dim\').hide();$(\'#out-of-stock\').hide();">X</span>'); // this is the big X at the top right of the pop-up
 
       $container.append($pic_column);
+      $info_column.append($action_row);
       $container.append($info_column);
       //$container.append($action_column);
       $container.append($close_window);
@@ -595,12 +630,23 @@
 
       $('#current-highlighted-product').css('display', 'none');
       $('#focus-dim').css('display','none');
-      $('#current-highlighted-product').css('top', ($(window).height()-modal_height)/2);
+      $('#current-highlighted-product').css('top', ($(window).height()-modal_height)/2 + $(window).scrollTop());
       console.log($('#current-highlighted-product').css('top'));
       $('#focus-dim').css('height', $(document).height());
 
       $('#current-highlighted-product').fadeIn();
       $('#focus-dim').fadeIn();
+
+      var container_bottom = $('#current-highlighted-product').position().top + modal_height;
+      var action_row_bottom = $('#popup-action-row').position().top + $('#popup-action-row').height();
+
+      console.log('container ' + container_bottom + ' action_row_bottom ' + action_row_bottom)
+
+      if (action_row_bottom > container_bottom) {
+        var delta_h = action_row_bottom - container_bottom;
+        var new_height = container_height + delta_h;
+        $('#current-highlighted-product').css('height', new_height);
+      }
 
     // panel should be populated with 1 row, 3 columns
     // absolute positioned x-out icon in top right
@@ -612,39 +658,67 @@
     //event for dim background
     $('#focus-dim').click(function(){
       $('#current-highlighted-product').remove();
+      $('#out-of-stock').remove();
       $('#focus-dim').remove();
     })
 
     //event for purchasing
     $('.action-popup-buy').click(function(){
-      //alert('in here')
       var prod_id = $(this).attr('data-id'); // grab product id from div
-      var quantity = 1;                      // buy one unit of product
-      purchase_product(prod_id, quantity);   // purchase product method call
+      purchase_product(prod_id, item);   // purchase product method call
     })
+
+    $('#show-desc').click(function(){
+      $('#description-tab').show();
+      $('#meet-maker-tab').hide();
+    })
+    $('#show-maker').click(function(){
+      $('#description-tab').hide();
+      $('#meet-maker-tab').show();     
+    })
+
   }
 
   function notify_about_purchase(){
     $('#added-to-cart').remove();
 
-    var $top_strip = $('<div id=\'added-to-cart\'>ADDED TO CART</div>');
-    $('body').append($top_strip);
+    var $bottom_strip = $('<div id=\'added-to-cart\'>ADDED TO CART</div>');
+    $('body').append($bottom_strip);
 
     //$('#added-to-cart').css('top', $(document).scrollTop())
 
-    $top_strip.delay(2000).fadeOut();
+    $bottom_strip.delay(2000).fadeOut();
   }
 
-  function purchase_product(prod_id, quantity){
+  function notify_about_stock(item_vendor, item_title){
+    $('#out-of-stock').remove();
+
+    // check if last character is a % -- if it is, remove
+    var item_name = item_title;
+    if (item_name.substring(item_name.length - 1, item_name.length) == '%') {
+      item_name = item_name.substring(0,item_name.length-1);
+    }
+    else {
+      item_name = item_name;
+    }
+
+    var $bottom_strip = $('<div id=\'out-of-stock\'>UH OH, WE\'VE RUN OUT OF THIS ITEM. BE THE <a href=\'/pages/reserve?vendor='+item_vendor+'&bar='+item_name+'\' style=\'text-decoration:underline;font-family:"brandon-blk";\'>FIRST TO KNOW</a> WHEN WE RESTOCK.</div>');
+    $('body').append($bottom_strip);
+
+    //$('#added-to-cart').css('top', $(document).scrollTop())
+
+    //$bottom_strip.delay(2000).fadeOut();
+  }
+
+  function purchase_product(prod_id, item){
       var data = $('#form-popup-'+prod_id).serialize();
-      var post_data = 'quantity='+quantity+'&'+data;
       var url_post = '/cart/add';
       var url_get = '/cart';
 
       var posting = $.ajax({
         type: 'POST',
         url: url_post, 
-        data: post_data,
+        data: data,
         dataType: 'json',
         success: function(response){
           var get_cart_data = $.ajax({
@@ -674,8 +748,10 @@
             },
             error: function(){alert('failed caro') }
           })
+
+
         },
-        error: function(){alert('failed caro init') }
+        error: function(){notify_about_stock(item.vendor, item.title)}
       });
   }
 
@@ -711,9 +787,7 @@
     console.log('this is your item')
     console.log(item);
 
-    var $row_container = $('<div class="product-preview row" id="product-cart-'+item.id+'" style="position:relative">\
-                              <div class=\'clear-item\' style=\'z-index:50;position:absolute;top:3px;right:3px;\' data-id=\''+item.variant_id+'\'>\
-                                X</div></div>')
+    var $row_container = $('<div class="product-preview row" id="product-cart-'+item.id+'" style="position:relative"></div>')
 
     $row_container.append($img_container);
     $row_container.append($info_container);
@@ -742,7 +816,8 @@
             success: function(response){
               console.log(response);
               console.log(response.item_count)
-              $('#cart-count').html(response.item_count)
+              $('#total-cart-count').html(response.item_count +' '+ pluralizeBars(repsonse.item_count).toUpperCase())
+              $('#total-price').html('CART TOTAL: $' + response.total_price)
               $('#product-rows-grid').html('');
               $.each(response.items, function(i,item){
                 console.log(item);
@@ -821,7 +896,11 @@
   </script>
 
   <!-- Check for Zepto support, load jQuery if necessary -->
-  {{ "zepto.js" | asset_url | script_tag }}
+
+  <!--[if !IE]>
+    {{ "zepto.js" | asset_url | script_tag }}
+  <![endif]-->
+
 
   {{ 'foundation.min.js' | asset_url | script_tag }}
 

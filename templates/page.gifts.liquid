@@ -1,0 +1,23 @@
+<div id='col-main'>
+	<div class='row' id='tasting-nav'>
+		<a id='summer-link' href='#'>Summer set</a>
+		<a class='last' id='bakers-link' href='#'>Baker set</a>
+	</div>
+	<div id='summer-set'>
+		{% include 'gift' with collections.summer %}
+	</div>
+	<div id='bakers-set' style='display:none'>
+		{% include 'gift' with collections.bakers %}
+	</div>
+</div>
+<script type="text/javascript">
+	$('#summer-link').click(function(){
+		$('#summer-set').show();
+		$('#bakers-set').hide();
+	});
+	$('#bakers-link').click(function(){
+		$('#summer-set').hide();
+		$('#bakers-set').show();
+	});
+
+</script>

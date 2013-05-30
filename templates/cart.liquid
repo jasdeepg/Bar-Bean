@@ -77,14 +77,25 @@
       <div id="checkout-proceed">
         <input class="btn-reversed btn" type="submit" id="update-cart" name="checkout" value="Proceed to Checkout" />
         {% if additional_checkout_buttons %}
-        <div id="additional-checkout-buttons">
+        <!--<div id="additional-checkout-buttons">
           <span id="additional-checkout-buttons-label">Or check out using:</span>
          {{ content_for_additional_checkout_buttons }}
-        </div>
+        </div>-->
         {% endif %}                       
       </div>
 
     </form>
   {% endif %}
+
+        <div class='featured-info-cart'>
+        <div id='emphasis'>DOES EVERYTHING LOOK GOOD?</div>
+        <div id='description'>If you're still searching for that perfect bar, here's a link to go back to our <a href='/collections/all'>collection</a>. Otherwise, once you head to the next step and complete the checkout process we'll do two things immediately:
+          <ol style='padding-left:1em;margin-top:5px;margin-bottom:5px'>
+            <li>Send you the nicest thank-you email you've ever received.</li>
+            <li>Put your order in a box headed straight your way.</li>
+          </ol>
+          Remember, shipping is FREE with an order of more than 5 bars. Below that, there's a $10 flat charge.
+        </div>
+      </div>
 
 </div><!--/#col-main -->

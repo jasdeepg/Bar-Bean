@@ -2,9 +2,9 @@
 
 <div class='row options-style'>
   <ul class='large-block-grid-3'>
-    <li ><a href="#" data-dropdown='brand-filters'>BY BRAND</a></li>
-    <li style='color:white;background:rgb(84,84,84)'><a href="#" data-dropdown='percent-filters'>BY PERCENTAGE</a></li>
-    <li><a href="#" data-dropdown='flavor-filters'>BY FLAVOR PROFILE</a></li>
+    <li><a id='brand-dropdown' href="#" data-dropdown='brand-filters'>BY BRAND</a></li>
+    <li style='color:white;background:rgb(84,84,84)'><a id='percentage-dropdown' href="#" data-dropdown='percent-filters'>BY COCAO PERCENTAGE</a></li>
+    <li><a id='flavor-dropdown' href="#" data-dropdown='flavor-filters'>BY FLAVOR PROFILE</a></li>
   </ul>
 </div>
 
@@ -36,20 +36,20 @@
       <li><a href='#options' class='option-value' data-option-value='.MW'></a> Midwest</li>
     </ul>
     <ul class='f-dropdown options' id='flavor-filters' data-dropdown-content data-option-key='filter'>
-      <li><a class='option-value' href='#' id='chocolatey' data-option-value='.chocolatey'>Chocolatey</a></li>
-      <li><a class='option-value' href='#' id='citrus' data-option-value='.citrus'>Citrus</a></li>
-      <li><a class='option-value' href='#' id='fruity' data-option-value='.fruity'>Fruity</a></li>
-      <li><a class='option-value' href='#' id='floral' data-option-value='.floral'>Floral</a></li>
-      <li><a class='option-value' href='#' id='earthy' data-option-value='.earthy'>Earthy</a></li>
-      <li><a class='option-value' href='#' id='nutty' data-option-value='.nutty'>Nutty</a></li>
-      <li><a class='option-value' href='#' id='spicy' data-option-value='.spicy'>Spicy</a></li>
-      <li><a class='option-value' href='#' id='creamy' data-option-value='.creamy'>Creamy</a></li>
+      <li><a class='option-value' id='chocolatey' data-option-value='.chocolatey'>Chocolatey</a></li>
+      <li><a class='option-value' id='citrus' data-option-value='.citrus'>Citrus</a></li>
+      <li><a class='option-value' id='fruity' data-option-value='.fruity'>Fruity</a></li>
+      <li><a class='option-value' id='floral' data-option-value='.floral'>Floral</a></li>
+      <li><a class='option-value' id='earthy' data-option-value='.earthy'>Earthy</a></li>
+      <li><a class='option-value' id='nutty' data-option-value='.nutty'>Nutty</a></li>
+      <li><a class='option-value' id='spicy' data-option-value='.spicy'>Spicy</a></li>
+      <li><a class='option-value' id='creamy' data-option-value='.creamy'>Creamy</a></li>
     </ul>
     <ul class='f-dropdown options' id='percent-filters' data-dropdown-content data-option-key='filter'>
-      <li><a class='option-value' href='#' id='forty' data-option-value='.forty'> Below 40%</a></li>
-      <li><a class='option-value' href='#' id='sixty' data-option-value='.sixty'> 41% to 60%</a></li>
-      <li><a class='option-value' href='#' id='eighty' data-option-value='.eighty'> 61% to 80%</a></li>
-      <li><a class='option-value' href='#' id='hundred' data-option-value='.hundred'> Above 80%</a></li>
+      <li><a class='option-value' id='forty' data-option-value='.forty'> Below 40%</a></li>
+      <li><a class='option-value' id='sixty' data-option-value='.sixty'> 41% to 60%</a></li>
+      <li><a class='option-value' id='eighty' data-option-value='.eighty'> 61% to 80%</a></li>
+      <li><a class='option-value' id='hundred' data-option-value='.hundred'> Above 80%</a></li>
     </ul>
 
 <div id="col-main" class="{{ collection.handle }}">
@@ -92,7 +92,12 @@
       {% if collection.products.size > 0 %}
         <div class="product-gridView clearfix">
           {% for product in collection.products %}
-            <!--{% cycle 'group1': '<div class="row" style="padding-bottom:10px;margin-bottom:10px;border-bottom: 1px solid grey">', '', '', '' %}-->
+              {% if product.variants.first.id == 310877485 %}
+
+              {% elsif product.variants.first.id == 305918605 %}
+
+              {% else %}
+
               {% capture test_40 %} {{ product.metafields.bar.percent | minus:41 }} {% endcapture %}
               {% capture test_60 %} {{ product.metafields.bar.percent | minus:61 }} {% endcapture %}
               {% capture test_80 %} {{ product.metafields.bar.percent | minus:81 }} {% endcapture %}
@@ -101,8 +106,8 @@
               <div class="large-3 columns gridItem {% for tag in product.tags %} {{tag}} {% endfor %} {% if test_40 contains '-' %}forty{% elsif test_60 contains '-' %}sixty{% elsif test_80 contains '-' %}eighty{% elsif test_100 contains '-' %}hundred{% endif %}" style="float:left" data-product='{{product.handle}}' data-id='{{product.variants.first.id }}' data-isBar='true' data-percent='{{ product.metafields.bar.percent }}'>
                 {% include 'product-grid-item-OLD' %}
               </div>
-            <!--{% cycle 'group2': '', '', '', '</div>' %}
-            {% cycle 'group3': '', '', '', '<hr>' %}-->
+
+              {%endif %}
           {% endfor %}
         </div>
 
@@ -114,9 +119,18 @@
     {% endpaginate %}
   </div>  
 
+  <div id='tell-us-request' style='background-color:rgb(221,221,221);font-family:"brandon-blk";text-align:center'>
+    <div class='row minor-break'>
+        CAN'T FIND WHAT YOU'RE LOOKING FOR?
+    </div>
+    <a href='/pages/request' class='large button'>TELL US</a>
+  </div>
 </div> <!-- /#col-main -->
 
 <script type="text/javascript">
+  $(document).ready(function(){
+        set_prod_hover_event();
+  })
   // add to masonry
   $('.product-grid').isotope({
     itemSelector :'.item',
@@ -144,6 +158,51 @@
   });
 
   // scratch JS
+ /* $('#brand-dropdown').mouseover(function(){
+    var top_pos = $('#brand-dropdown').position().top + $('#brand-dropdown').height();
+
+    $('#brand-filters').addClass('open');
+    $('#brand-filters').css('position', 'absolute');
+    $('#brand-filters').css('left', $('#brand-dropdown').position().left)
+    $('#brand-filters').css('top', top_pos)
+  }).mouseout(function(){
+    $('#brand-filters').removeClass('open');
+    $('#brand-filters').css('left', '-999999px')
+  })
+
+  $('#percentage-dropdown').mouseover(function(){
+    var top_pos = $('#percentage-dropdown').position().top + $('#percentage-dropdown').height();
+
+    $('#percent-filters').addClass('open');
+    $('#percent-filters').css('position', 'absolute');
+    $('#percent-filters').css('left', $('#percentage-dropdown').position().left)
+    $('#percent-filters').css('top', top_pos)
+  }).mouseout(function(){
+    $('#percent-filters').removeClass('open');
+    $('#percent-filters').css('left', '-999999px')
+  })
+
+  $('#flavor-dropdown').mouseover(function(){
+    var top_pos = $('#flavor-dropdown').position().top + $('#flavor-dropdown').height();
+
+    $('#flavor-filters').addClass('open');
+    $('#flavor-filters').css('position', 'absolute');
+    $('#flavor-filters').css('left', $('#flavor-dropdown').position().left)
+    $('#flavor-filters').css('top', top_pos);
+  })
+
+  var flavor_flag = false;
+  $('#flavor-filters').mouseover(function(){
+    flavor_flag = true;
+  }).mouseout(function(){
+    if (flavor_flag){
+      console.log('flavor mouseout ' + flavor_flag)
+      $('#flavor-filters').removeClass('open');
+      $('#flavor-filters').css('left', '-999999px')
+      flavor_flag = false;
+    }
+  })*/
+
   $('.dt-size').parent().remove();
   $('.hor1').parent().remove();
   $('.ver1').parent().remove();
@@ -265,6 +324,12 @@
       $(this).addClass('selected');
       $(this).css('background-color', 'white')
       if ($option_key.attr('data-option-key')=='filter'){
+
+        if ($option_key.attr('id')=='percent-filters'){
+          cleaned_filters = cleanPercentFilter(filters);
+          filters = cleaned_filters;
+        }
+
         filters.push($(this).attr('data-option-value'))
         var filter_string = getFilterString(filters);
 
@@ -391,6 +456,22 @@
       hold_filters = hold_filters +' '+ v;
     })
     return hold_filters;
+  }
+
+  function cleanPercentFilter(filters){
+    var percent_indices = [filters.indexOf('.forty'), filters.indexOf('.sixty'), filters.indexOf('.eighty'), filters.indexOf('.hundred')];
+
+    console.log('percent_index '+ percent_indices)
+
+    if ((percent_indices[0] >-1) | (percent_indices[1]>-1) | (percent_indices[2]>-1) | (percent_indices[3]>-1)){
+      $.each(percent_indices, function(i,index){
+        if (index>-1){
+          filters.splice(index,1);
+        }
+      })
+    }
+
+    return filters;
   }
 
 

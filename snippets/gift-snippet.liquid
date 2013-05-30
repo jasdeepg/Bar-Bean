@@ -1,0 +1,17 @@
+<div class='row' id='giftSummary'>
+	<!-- this is where the gift summary is -->
+	{% for product in gift-snippet.products %}
+		<div class='bar-peak' style='background: url("{{ product.featured_image | product_img_url: "medium" }}");'>
+		</div>
+	{% endfor %}
+	SAMPLE TEXT
+</div>
+<div class='row' id='giftBars'>
+	<!-- this is where the individual bars are showcased -->
+	{% for product in gift-snippet.products %}
+		<div class='large-2 columns' class='giftBarDesc'>
+			<div class='giftImgContainer' style='background: url("{{ product.featured_image | product_img_url: "medium" }}");'></div>
+			<div class='giftFlavors'>{{ product.description }}</div>
+		</div>
+	{% endfor %}
+</div>

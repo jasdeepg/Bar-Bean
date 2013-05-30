@@ -420,7 +420,6 @@ body { text-align: center; }
  * Shopping Cart at the Top
  */
 
-body{ border-top: solid 4px {{settings.cart_bg_colour}}; }
 
 #umbrella{
   /*background: {{settings.cart_bg_colour}}; */
@@ -1154,10 +1153,10 @@ article footer .btn { padding: 2px 10px; }
   padding: 0 0 5px 0;
   margin: 0 0 10px 0;
   }
-.customer_address_table{ margin: 0; }
+.customer_address_table{ margin: 0;}
 .customer_address_table td{ border: none; }
 .customer_address_table input{ margin: 0 5px 0 0; }
-.customer_address .action-bottom{ margin-left: 141px; }
+.customer_address .action-bottom{ margin-left: 141px; margin-top: 10px; }
 
 
 /** >> view individual orders */
@@ -1419,18 +1418,23 @@ col.checkout-delete{ width: 80px; }
   color:white;
   padding-top: 50px;
   padding-bottom: 0px;
+  height:auto !important;
+  text-align:left;
   {% unless ((settings.footer_bg_colour == settings.bg_colour) and (settings.body_bg_img == "none")) %}
   padding-left: 20px;
   padding-right: 20px;
   {% endunless %}
 
-  margin: 25px 0 50px 0;
+  margin: 0 0 0 0;
   font-size: 11px;
   clear: both;
   overflow: hidden;
   height: 1%;
   color: {{ settings.footer_txt_colour }};
   }
+
+#bottom a {color:white;}
+#bottom a:hover {color:rgb(153, 153, 153);}
 
 #footer-left{
   width: 400px;
@@ -1450,8 +1454,6 @@ col.checkout-delete{ width: 80px; }
   margin: 0 0 0 10px;
   padding: 0 0 0 10px;
   }
-#bottom a{ color: {{ settings.footer_link_colour }};}
-#bottom a:hover{ color: {{ settings.footer_link_hover_colour }};}
 #bottom p{ line-height: 1.5em }
 
 #footer-nav{
@@ -1899,6 +1901,8 @@ a.btn:hover{
 
 .dt-size {display:none;}
 
+.tcho-size {height: 180.83px; width:180.83px;}
+
 /* Proportional pixels
 .dand-size {height:271.25px;width:125.42px;}
 
@@ -1960,7 +1964,7 @@ a.btn:hover{
   z-index: 50;
   /*float:left;
   margin-left:250px;*/
-  width:623px;
+  width:610px;
   margin: 0 auto;
 }
 
@@ -1996,9 +2000,6 @@ a.btn:hover{
 .templateCollection .row {max-width: 200em;}
 .templatePage .row {max-width: 200em}
 .templateCart .row {max-width: 200em;}
-.templateCustomersAccount .row,
-  .templateCustomersLogin .row {max-width: 200em}
-
 
 .big-break {letter-spacing:8px;font-family:'brandon-blk';text-align:center;line-height:150px;height:150px;font-size:24px;}
 .minor-break {letter-spacing:8px;font-family:'brandon-blk';background-color:rgb(221,221,221);text-align:center;line-height:100px;height:100px;font-size:24px;}
@@ -2062,24 +2063,29 @@ a.btn:hover{
   margin-left:0px !important;
   margin-right:0px !important;
   max-width:200em !important;
-  height:100px;
+  height:50px;
   text-align:center;
 }
 
-.options-style ul {color:white;font-family:'brandon-blk';font-size:24px;line-height: 100px;}
+.options-style ul {color:white;font-family:'brandon-blk';font-size:24px;line-height: 30px;}
 .options-style ul a {color:white;}
 .options-style ul a:hover {color:gray;}
 .options-style #region-filters {}
 .options-style li {background: rgb(51,51,51);}
+.options-style ul li {padding-top:12px;}
 .option-value {display:block;}
 .inline-summary {display:inline !important;color:black;}
 #show-filter-choices {color:rgb(118,118,118);}
 #show-filter-choices a {color:black;}
 
+.options li a {display:block; width:100%;}
+
 .helper{height:100%;}
 .bar-image {margin-left:10px;margin-right:10px;border:4px solid white;height:100%;}
 
 #filter-breadcrumbs {font-family:'brandon-blk';font-size:13px;height:30px;margin:0;line-height:30px;padding-top:15px;}
+
+.product-gridView {margin:0 auto;}
 
 #bars-view {display:none;}
 #grid-view {display:block;}
@@ -2089,14 +2095,18 @@ a.btn:hover{
     height:260px;}
   .gridViewProductTitle {font-family:'brandon-blk';font-size:1.5em;}
   .gridViewVendorTitle {font-family:'brandon-blk';font-size:1.05em;}
-  .gridViewSubTitle {font-family:'brandon-reg';font-size:1.05em;color:red;}
+    .gridViewVendorTitle a {color:black;}
+    .gridViewVendorTitle a:hover {text-decoration: underline;}
+  .gridViewSubTitle {font-family:'brandon-reg';font-size:1.05em;}
   .gridViewSubTags {font-family:'brandon-reg';font-size:0.7em;}
     .gridViewSubTags ul {line-height: 15px; list-style-type: none;}
     .gridViewSubTags li {display:inline;}
     .gridViewSubTags #description {display:none;}
     .gridViewSubTags #dimensions {display:none;}
+    .gridViewSubTags #meet-maker {display:none;}
   .gridViewActionContainer {position:absolute; bottom:10px; font-family:'brandon-blk';font-size:1.2em;}
     .gridViewActionContainer a {margin-bottom:5px;background:rgb(239,239,239); color:black;}
+    .gridViewActionContainer .btn-col {padding-left:50px; padding-right:50px;}
   .gridItem span {line-height:1.3em;}
 
 /*************
@@ -2106,8 +2116,8 @@ a.btn:hover{
 /* on page viewport */
 #current-highlighted-product {
   z-index:40;
-position:fixed;
-  height:500px; 
+  position:absolute;
+  height:550px; 
   background:white; 
   width:100%;
   -moz-box-shadow: 0 2px 2px black;
@@ -2115,25 +2125,45 @@ position:fixed;
   box-shadow: 0 2px 10px black;
   max-width: 200em !important;}
 #focus-dim {z-index:30;width:100%;position:absolute;top:0;background:black; opacity:.4;}
-#added-to-cart {z-index:51; position:fixed; top:0; height:30px; width:100%; background-color:rgb(128,168,38); font-family: 'brandon-blk';font-size:18px;line-height: 30px;}
+#added-to-cart {z-index:51; position:fixed; bottom:0; height:30px; width:100%; background-color:rgb(128,168,38); font-family: 'brandon-blk';font-size:18px;line-height: 30px;}
+#out-of-stock {z-index:51; position:fixed; bottom:0; height:30px; width:100%; background-color:rgb(205,92,92); font-family: 'brandon-blk';font-size:18px;line-height: 30px;}
+#out-of-stock a {color:#0000cd;}
 .action-learn:hover {color:black;}
 .prod-sub-heading {font-size:13px;font-family:'brandon-reg';}
 
 
 .product-popup-desc {margin-left:-24px !important;}
+#popup-nav {
+  font-family:'brandon-reg';
+  font-size:11px;
+  margin-bottom:10px;
+  }
+#popup-nav a {background-color:black;color:white;padding:5px;}
+#popup-nav a:hover {color:rgb(60,60,60);}
 
 .flav #tags {}
 .flav #description {display:none;}
 .flav #dimensions {display:none;}
+.flav #meet-maker {display:none;}
 .flav ul {line-height: 15px; list-style-type: none;}
 
+.main-desc #description {margin-left:-24px !important;}
 .main-desc #flavors {display:none;}
 .main-desc #dimensions {display:none;}
+.main-desc #meet-maker {display:none;}
 .main-desc ul {list-style-type: none;}
 
 .dim #description {display:none;}
 .dim #flavors {display:none;}
+.dim #meet-maker {display:none;}
 .dim ul {line-height: 15px; list-style-type: none;}
+
+#meet-maker-tab #meet-maker {margin-left:-24px !important;}
+#meet-maker-tab #description {display:none;}
+#meet-maker-tab #flavors {display:none;}
+#meet-maker-tab #dimensions {display:none;}
+#meet-maker-tab ul {list-style-type: none;}
+
 
 .dim-sub-head {text-transform: uppercase; font-weight: bold};
 
@@ -2170,11 +2200,55 @@ position:fixed;
 }
 
 /*************
+* About page
+**************/
+#about-pic-1 {background: url('{{ "about_1.jpg" | asset_url }}'); background-size:cover;}
+#about-pic-2 {background: url('{{ "about_2.jpg" | asset_url }}'); background-size:cover;}
+#about-pic-3 {background: url('{{ "about_3.jpg" | asset_url }}'); background-size:cover;}
+#about-pic-4 {background: url('{{ "about_4.jpg" | asset_url }}'); background-size:cover;}
+
+/*************
+* Cart page
+**************/
+.featured-info-cart > #emphasis {letter-spacing:8px;font-family:'brandon-blk';font-size:24px;}
+.featured-info-cart > #description {font-family:'brandon-reg';font-size:24px;margin-bottom:37px;line-height:30px;padding-top:20px;}
+
+/*************
+* Gift page
+**************/
+
+#tasting-nav {text-align: center; margin-top:10px;margin-bottom:10px;font-size:24px; font-family:'brandon-reg';}
+#tasting-nav a {text-decoration: underline;padding-right:30px;}
+#tasting-nav > .last {text-decoration: underline; padding-right:0px;}
+#tasting-nav a:hover {text-decoration: none;}
+
+#giftSummary {height:400px; background: rgba(60,60,60,.03);}
+#giftSummary > .bar-peak {width:40px;height:100%; background-size:cover;float:left;}
+#giftSummary > #marketing-text {padding:60px;margin-left:200px;}
+#marketing-text > #emphasis {font-family:'brandon-blk';font-size:24px;letter-spacing:8px;}
+#marketing-text > .description {font-family:'brandon-reg';font-size:24px;line-height:30px;}
+.description > #product-handle {display:none;}
+#marketing-text > .handle-hidden {display:none;}
+#handle-hidden > #set-description {display:none;}
+#giftBars {max-width:65em;}
+#giftBars > .giftBarDesc {float:left;width:177px;}
+#giftBars .giftImgContainer {height:270px; width:100%; background-size: cover; }
+#giftBars .giftFlavors {margin-top:10px; font-family:'brandon-reg';font-size:0.7em;}
+#giftBars .giftFlavors ul {text-align: center; line-height: 15px; list-style-type: none;}
+#giftBars .giftFlavors li {}
+#giftBars .giftFlavors #description {display:none;}
+#giftBars .giftFlavors #dimensions {display:none;}
+#giftBars .giftFlavors #meet-maker {display:none;}
+
+/*************
 * Marketing banner
 **************/
 .header-row {margin:0 !important;}
 .top-banner {margin-top:0px;height:500px !important;}
-#menu-nav {min-width:1050px; width:100%;z-index:50;background: rgba(60,60,60,0.9);height:49px;}
+#menu-nav {min-width:1050px; width:100%;z-index:50;height:49px;}
+
+.templateCart #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+.templatePage #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
 
 .logo-title {letter-spacing:8px;position: absolute; height: 350px; width:100%; font-family:'brandon-blk'; top:0;}
 .market-square {background: url('http://www.hhhhold.com/800x300'); background-size: cover; display: table-cell; text-align: center; float: left; margin-right: 50px; width:300px !important; height:300px !important;}
@@ -2184,6 +2258,9 @@ position:fixed;
 .float-title {text-align:center; position: relative; top:45%; font-size:40px; font-family:'brandon-blk';color:white;}
 .float-title a {color:white;}
 .float-title a:hover {color:gray;}
+
+#free-shipping a {color:white;}
+#free-shipping a:hover {color:black;}
 
 /* Cart in banner */
 .cart-panel {background:rgb(221,221,221);border: 1px solid black;font-family:'brandon-blk';z-index:20; padding: 5px; position:absolute;left:-550px;width:550px;display:none;}
@@ -2233,13 +2310,59 @@ position:fixed;
 #market-title-product p { background-color: black; top:40%; position: relative; vertical-align: middle; text-align: center; z-index:10; color:white;  font-size:45px;}
 
 /* Cart */
-#market-cart { position: relative; width: 100%; height: 300px; background: url('http://www.hhhhold.com/2000x500/d');  background-size: cover; }
+#market-cart { position: relative; width: 100%; height: 50px !important; background: url() 50% 78%;  background-size: cover; }
+
+/* Shipping */
+#market-pageshipping { position: relative; width: 100%; height: 50px !important; background: url() 50% 78%;  background-size: cover; }
+
+/* Gift */
+#market-pagegifts { position: relative; width: 100%; height: 500px !important; background: url('{{ "banner_9.png" | asset_url }}') 50% 59%;  background-size: cover; }
+.pagegifts-title {padding-top:16%; color:white;}
+.pagegifts-title .row div {text-align:center; position:relative;top:45%; font-family:'brandon-blk'; font-size:48px;}
+
+/* Bar Request */
+#market-pagerequest { position: relative; width: 100%; height: 50px !important; background: url() 50% 78%;  background-size: cover; }
+#market-pagereserve { position: relative; width: 100%; height: 50px !important; background: url() 50% 78%;  background-size: cover; }
+
+/* Account Management */
+.templateCustomersAccount .row,
+  .templateCustomersLogin .row {max-width: 200em}
+.templateCustomersLogin .row {max-width: 200em;}
+.templateCustomersRegister .row {max-width: 200em;}
+.templateCustomersAddresses .row {max-width: 200em;}
+.templateCustomersOrder .row {max-width: 200em;}
+
+.templateCustomersLogin > .top-banner {height:50px !important;}
+.templateCustomersLogin .logo-title {height:50px !important;}
+.templateCustomersLogin #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+
+.templateCustomersRegister > .top-banner {height:50px !important;}
+.templateCustomersRegister .logo-title {height:50px !important;}
+.templateCustomersRegister #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+
+.templateCustomersAccount > .top-banner {height:50px !important;}
+.templateCustomersAccount .logo-title {height:50px !important;}
+.templateCustomersAccount #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+
+.templateCustomersAddresses > .top-banner {height:50px !important;}
+.templateCustomersAddresses .logo-title {height:50px !important;}
+.templateCustomersAddresses #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+
+.templateCustomersOrder > .top-banner {height:50px !important;}
+.templateCustomersOrder .logo-title {height:50px !important;}
+.templateCustomersOrder #menu-nav {background-color:rgba(60, 60, 60, 0.901961);}
+
+#customer-register {width:50%; margin:0 auto;}
+#customer_login {width:50%;}
+#address_tables {width:50%; margin:0 auto;}
+#order_details .order_summary_note {color:black !important;}
 
 /*************
 * Marketing banner
 **************/
 .footer-info {max-width:65em !important; color:white;font-size:17px;font-family:'brandon-reg';}
 .footer-info p {line-height:0em !important;}
+#twitter img {width:53px; float:left; margin-top:-11px;}
 
 /**
 * Test
@@ -2250,13 +2373,33 @@ position:fixed;
 
 }
 
-@media only screen and (min-device-width: 768px) and (max-device-width:1024px) {
-  .index-title .row div {
-    background-color: black;
+@media only screen and (min-device-width: 768px) and (max-device-width:1049px) {
+    #grid-view {
+    max-width:768px;
   }
 }
 
-@media only screen and (min-width: 1050px) {
+@media only screen and (min-width: 1050) and (max-width: 1199px) {
+  .featured {
+    max-width: 1000px !important;
+    margin:0 auto!important;
+  }
+  .featured .hor-big {height:263px;}
+  .featured .small-square-art {height:370px;}
+  .featured-products-overall {
+    margin-left: auto !important; 
+    margin-right: auto !important; 
+    max-width: 930px !important;}
+  .featured-products-artisan {
+    margin-left: auto !important; 
+    margin-right: auto !important; 
+    max-width: 1000px !important;}
+  #grid-view {
+    max-width:1000px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
   .featured {
     max-width: 1400px !important;
     margin:0 auto!important;
@@ -2270,7 +2413,7 @@ position:fixed;
   .featured-products-artisan {
     margin-left: auto !important; 
     margin-right: auto !important; 
-    max-width: 595px !important;}
+    max-width: 1000px !important;}
   #grid-view {
     max-width:1404px;
   }
