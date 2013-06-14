@@ -1,0 +1,54 @@
+<div id="col-main">
+
+<!-- fact section -->
+<section id='featured-fact-section'>
+  <div class='row minor-break'>
+    NEW WAVE OF CHOCOLATE
+  </div>
+  <div class='row featured'>
+    {% include 'featured-fact-grid' %}
+  </div>
+</section>
+
+<!--style all of this -->
+<section id='popular-products-section'>
+  <div class='row big-break'>
+    POPULAR PRODUCTS
+  </div>
+  <div class='row featured-products-overall'>
+    {% for product in collections.popular-1.products %}
+        <div class=' item {% for tag in product.tags %} {{tag}} {% endfor %}' data-id='{{product.variants.first.id}}' data-product='{{product.handle}}'>
+          {% include 'product-grid-item' %}
+        </div>
+    {% endfor %}
+  </div>
+  <div class='row view-more'>
+    <a href='http://lp-beta.myshopify.com/collections/all'>VIEW ALL PRODUCTS</a>
+  </div>
+</section>
+
+<!-- script for adding isotope support -->
+<script type="text/javascript">
+  $(function(){
+    set_prod_hover_event();
+    
+    $('.featured-products-artisan').isotope({
+      itemSelector :'.item',
+      masonry: {
+        columnWidth: 1
+      },
+      getSortData : {
+        percent : function ( $elem ) {
+          return $elem.attr('data-percent');
+        }
+      }
+    });
+  });
+  </script>
+
+  <script type="text/javascript">
+    var link = $('#hide-link a').attr('href')
+    $('#show-link a').attr('href', link)
+  </script>
+
+</div><!-- /#col-main -->
